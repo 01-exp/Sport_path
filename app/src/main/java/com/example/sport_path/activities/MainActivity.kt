@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
         ServiceLocator.registerService("ProfileFragment",ProfileFragment())
     }
 
+
+
     private fun openFragment(fragment: Fragment) {
         ServiceLocator.getService<Router>("Router")?.addFragment(fragment, true)
     }
