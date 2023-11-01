@@ -13,13 +13,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PlacesViewModel(private val sport: Sport) : ViewModel() {
+class PlacesViewModel() : ViewModel() {
 
     private val   placeListMutable : MutableLiveData<List<Place>> = MutableLiveData()
 
     val placeList: LiveData<List<Place>> = placeListMutable
 
-    fun loadPlaces(){
+    fun loadPlaces(sport: Sport){
 
         viewModelScope.launch {
             val placeList = withContext(Dispatchers.IO) {
@@ -31,8 +31,8 @@ class PlacesViewModel(private val sport: Sport) : ViewModel() {
     }
 }
 
-class MainViewModelFactory(private val sport: Sport) :
+class PlacesViewModelFactory() :
     ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = PlacesViewModel(sport) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = PlacesViewModel() as T
 
 }

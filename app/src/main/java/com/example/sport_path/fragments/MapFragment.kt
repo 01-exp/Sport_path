@@ -27,8 +27,10 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
     private lateinit var binding: FragmentMapBinding
     private lateinit var mapView: MapView
     private lateinit var dialogList: DialogList
-    lateinit var viewModel : PlacesViewModel
+
+    lateinit var viewModel: PlacesViewModel
     var currentSport = Sport("Баскетбол", R.drawable.backetball)
+    var currentPosition = Utils.startPosition
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setApiKey(savedInstanceState)
@@ -37,11 +39,34 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         binding = FragmentMapBinding.inflate(layoutInflater)
 
         val router = ServiceLocator.getService<Router>("Router")!!
+        viewModel = ServiceLocator.getService<PlacesViewModel>("PlacesViewModel")!!
+
+
         mapView = binding.mapView
-        setStartPositinOnMap()
-        setTestPoints()
+        setPositinOnMap(currentPosition)
+        viewModel.placeList.observe(this) {
+            setTestPoints(it)
+        }
 
+        binding.buttonPlus.setOnClickListener {
+            currentPosition = CameraPosition(
+                currentPosition.target,
+                /* zoom = */ currentPosition.zoom*(100f/95f),
+                /* azimuth = */currentPosition.azimuth,
+                /* tilt = */ currentPosition.tilt
+            )
+            setPositinOnMap(currentPosition)
+        }
 
+        binding.buttonMinus.setOnClickListener {
+            currentPosition = CameraPosition(
+                currentPosition.target,
+                /* zoom = */ currentPosition.zoom*0.95f,
+                /* azimuth = */currentPosition.azimuth,
+                /* tilt = */ currentPosition.tilt
+            )
+            setPositinOnMap(currentPosition)
+        }
 
 
 
@@ -61,7 +86,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
 
         dialogList = object : DialogList(
             context,
-            SportAdapter(sportsList,this@MapFragment)
+            SportAdapter(sportsList, this@MapFragment)
         ) {
 
         }
@@ -69,14 +94,9 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         dialogList.show()
     }
 
-    private fun setTestPoints() {
+    private fun setTestPoints(placeList: List<Place>) {
+        mapView.mapWindow.map.mapObjects.clear()
         val imageProvider = ImageProvider.fromResource(context, R.drawable.icon)
-        val placeList = listOf(
-            Place(Point(47.237422, 39.712262), "Поршкеян тут"),
-            Place(Point(47.23668641935381, 39.71187635010748), "негр с газонокосилкой"),
-            Place(Point(47.239467141531335, 39.7124612930925), "Джувенс"),
-            Place(Point(47.242212995994976, 39.71151033401034), "я тут срал")
-        )
         val style = TextStyle().apply {
             size = 13.0f
             placement = TextStyle.Placement.TOP
@@ -90,17 +110,11 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         }
     }
 
-    private fun setStartPositinOnMap() {
+    private fun setPositinOnMap(position: CameraPosition) {
         mapView.mapWindow.map.move(
-            CameraPosition(
-                Point(47.237422, 39.712262),
-                /* zoom = */ 17.5f,
-                /* azimuth = */0.0f,
-                /* tilt = */ 0.0f
-            )
+            position
         )
     }
-
 
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -132,7 +146,8 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         currentSport = sport
         binding.sportName.text = sport.name
         binding.sportImage.setImageResource(sport.icon)
-       dialogList.cancel()
+        viewModel.loadPlaces(currentSport)
+        dialogList.cancel()
     }
 
 

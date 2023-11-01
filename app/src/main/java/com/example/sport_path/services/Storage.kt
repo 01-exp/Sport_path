@@ -18,7 +18,7 @@ class Storage() {
         return placeList
     }
 
-    val placeList = listOf(
+    val AllplaceList = listOf(
         Place(Point(47.237422, 39.712262), "Поршкеян тут"),
         Place(Point(47.23668641935381, 39.71187635010748), "негр с газонокосилкой"),
         Place(Point(47.239467141531335, 39.7124612930925), "Джувенс"),

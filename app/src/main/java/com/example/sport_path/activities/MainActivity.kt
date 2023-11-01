@@ -3,11 +3,14 @@ package com.example.sport_path.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.sport_path.R
 import com.example.sport_path.fragments.MapFragment
 import com.example.sport_path.fragments.ProfileFragment
 import com.example.sport_path.services.Router
 import com.example.sport_path.services.ServiceLocator
+import com.example.sport_path.services.maps.PlacesViewModel
+import com.example.sport_path.services.maps.PlacesViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +24,12 @@ class MainActivity : AppCompatActivity() {
         ServiceLocator.registerService("Router", Router(R.id.place_holder, supportFragmentManager))
         ServiceLocator.registerService("MapFragment",MapFragment())
         ServiceLocator.registerService("ProfileFragment",ProfileFragment())
+        ServiceLocator.registerService("PlacesViewModel",
+            ViewModelProvider(
+                this,
+                PlacesViewModelFactory()
+            )[PlacesViewModel::class.java]
+        )
     }
 
 

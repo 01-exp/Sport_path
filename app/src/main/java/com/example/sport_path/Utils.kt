@@ -1,9 +1,8 @@
 package com.example.sport_path
 
 import com.example.sport_path.data_structures.Sport
-import java.io.File
-import java.io.FileInputStream
-import java.util.Properties
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
 
 object Utils {
 
@@ -43,6 +42,13 @@ object Utils {
 
 
 
+    )
+
+    val startPosition = CameraPosition(
+        Point(47.237422, 39.712262),
+        /* zoom = */ 17.5f,
+        /* azimuth = */0.0f,
+        /* tilt = */ 0.0f
     )
 
 
