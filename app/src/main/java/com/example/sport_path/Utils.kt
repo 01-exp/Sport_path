@@ -39,9 +39,6 @@ object Utils {
         Sport("румба", R.drawable.walleyball),
         Sport("румба", R.drawable.walleyball),
         Sport("румба", R.drawable.walleyball),
-
-
-
     )
 
     val startPosition = CameraPosition(

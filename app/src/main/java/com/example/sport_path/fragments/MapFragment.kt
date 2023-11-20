@@ -13,11 +13,11 @@ import com.example.sport_path.services.maps.SportAdapter
 import com.example.sport_path.Utils
 import com.example.sport_path.data_structures.Sport
 import com.example.sport_path.databinding.FragmentMapBinding
+import com.example.sport_path.dialogs.ModalBottomSheetDialog
 import com.example.sport_path.services.Router
 import com.example.sport_path.services.ServiceLocator
 import com.example.sport_path.services.maps.PlacesViewModel
 import com.yandex.mapkit.MapKitFactory
-import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.TextStyle
 import com.yandex.mapkit.mapview.MapView
@@ -28,12 +28,11 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
     private lateinit var mapView: MapView
     private lateinit var dialogList: DialogList
 
-    lateinit var viewModel: PlacesViewModel
-    var currentSport = Sport("Баскетбол", R.drawable.backetball)
-    var currentPosition = Utils.startPosition
+    private lateinit var viewModel: PlacesViewModel
+    private var currentSport = Sport("Баскетбол", R.drawable.backetball)
+    private var currentPosition = Utils.startPosition
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setApiKey(savedInstanceState)
         MapKitFactory.setApiKey(BuildConfig.API_KEY)
         MapKitFactory.initialize(context)
         binding = FragmentMapBinding.inflate(layoutInflater)
@@ -43,7 +42,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
 
 
         mapView = binding.mapView
-        setPositinOnMap(currentPosition)
+        setPositionOnMap(currentPosition)
         viewModel.placeList.observe(this) {
             setTestPoints(it)
         }
@@ -51,21 +50,21 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         binding.buttonPlus.setOnClickListener {
             currentPosition = CameraPosition(
                 currentPosition.target,
-                /* zoom = */ currentPosition.zoom*(100f/95f),
+                /* zoom = */ currentPosition.zoom * (100f / 95f),
                 /* azimuth = */currentPosition.azimuth,
                 /* tilt = */ currentPosition.tilt
             )
-            setPositinOnMap(currentPosition)
+            setPositionOnMap(currentPosition)
         }
 
         binding.buttonMinus.setOnClickListener {
             currentPosition = CameraPosition(
                 currentPosition.target,
-                /* zoom = */ currentPosition.zoom*0.95f,
+                /* zoom = */ currentPosition.zoom * 0.95f,
                 /* azimuth = */currentPosition.azimuth,
                 /* tilt = */ currentPosition.tilt
             )
-            setPositinOnMap(currentPosition)
+            setPositionOnMap(currentPosition)
         }
 
 
@@ -101,26 +100,38 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
             size = 13.0f
             placement = TextStyle.Placement.TOP
         }
+
         for (place in placeList) {
             mapView.mapWindow.map.mapObjects.addPlacemark().apply {
                 geometry = place.point
                 setIcon(imageProvider)
                 setText(place.text, style)
+                addTapListener{ _, _ -> goTo(place) }
             }
+
         }
     }
 
-    private fun setPositinOnMap(position: CameraPosition) {
+    private fun goTo(place: Place): Boolean {
+        val modalBottomSheetFragment = ModalBottomSheetDialog(place)
+        parentFragmentManager.let {
+            modalBottomSheetFragment.show(
+                it,
+                modalBottomSheetFragment.tag
+            )
+        }
+
+
+        return true
+    }
+
+
+    private fun setPositionOnMap(position: CameraPosition) {
         mapView.mapWindow.map.move(
             position
         )
     }
 
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean("haveApiKey", true)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
