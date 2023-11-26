@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.sport_path.data_structures.Place
 import com.example.sport_path.data_structures.Sport
-import com.example.sport_path.services.Storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,7 +22,7 @@ class PlacesViewModel() : ViewModel() {
 
         viewModelScope.launch {
             val placeList = withContext(Dispatchers.IO) {
-                Storage().getPlaceList(sport)
+                PlaceManager().getPlacesOnSport(sport)
 
             }
             placeListMutable.value = placeList

@@ -9,8 +9,12 @@ import com.example.sport_path.fragments.MapFragment
 import com.example.sport_path.fragments.ProfileFragment
 import com.example.sport_path.services.Router
 import com.example.sport_path.services.ServiceLocator
+import com.example.sport_path.services.UsersManager
 import com.example.sport_path.services.maps.PlacesViewModel
 import com.example.sport_path.services.maps.PlacesViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,6 +23,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initServices()
         ServiceLocator.getService<MapFragment>("MapFragment")?.let { openFragment(it) }
+
+        CoroutineScope(Job()).launch {
+
+            UsersManager().getUser(0)
+
+        }
     }
     private fun initServices() {
         ServiceLocator.registerService("Router", Router(R.id.place_holder, supportFragmentManager))

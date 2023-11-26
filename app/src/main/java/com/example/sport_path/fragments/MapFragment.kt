@@ -29,7 +29,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
     private lateinit var dialogList: DialogList
 
     private lateinit var viewModel: PlacesViewModel
-    private var currentSport = Sport("Баскетбол", R.drawable.backetball)
+    private var currentSport = Utils.Sports[0]
     private var currentPosition = Utils.startPosition
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,7 +107,10 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
                 setIcon(imageProvider)
                 setText(place.text, style)
                 addTapListener{ _, _ -> goTo(place) }
+
+
             }
+            
 
         }
     }
