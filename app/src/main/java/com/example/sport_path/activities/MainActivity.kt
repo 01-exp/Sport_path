@@ -24,11 +24,7 @@ class MainActivity : AppCompatActivity() {
         initServices()
         ServiceLocator.getService<MapFragment>("MapFragment")?.let { openFragment(it) }
 
-        CoroutineScope(Job()).launch {
 
-            UsersManager().getUser(0)
-
-        }
     }
     private fun initServices() {
         ServiceLocator.registerService("Router", Router(R.id.place_holder, supportFragmentManager))
