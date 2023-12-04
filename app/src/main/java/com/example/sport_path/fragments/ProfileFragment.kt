@@ -12,14 +12,14 @@ import com.example.sport_path.services.ServiceLocator
 
 class ProfileFragment : Fragment() {
 
-    private lateinit var binding : FragmentProfileBinding
+    private lateinit var binding: FragmentProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentProfileBinding.inflate(layoutInflater)
         val router = ServiceLocator.getService<Router>("Router")!!
         binding.button3.setOnClickListener {
             ServiceLocator.getService<MapFragment>("MapFragment")?.let {
-                router.replaceFragment(it,true)
+                router.replaceFragment(it, true)
             }
         }
 
@@ -30,6 +30,7 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return binding.root
+
     }
 
 
