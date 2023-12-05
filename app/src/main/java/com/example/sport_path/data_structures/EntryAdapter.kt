@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sport_path.R
 import com.example.sport_path.databinding.EntryItemBinding
 import java.util.ArrayList
 
@@ -14,7 +15,7 @@ class EntryAdapter: RecyclerView.Adapter<EntryAdapter.EntryHolder>() {
         fun bind(entry: Entry) = with(binding)
 
         {
-           textView2.text = entry.title
+           textView2.text = entry.startTime
         }
     }
 
