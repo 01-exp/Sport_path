@@ -14,6 +14,8 @@ import com.example.sport_path.services.StorageImpl
 import com.example.sport_path.services.users.UserManager
 import com.example.sport_path.services.maps.PlacesViewModel
 import com.example.sport_path.services.maps.PlacesViewModelFactory
+import com.example.sport_path.services.users.UsersViewModel
+import com.example.sport_path.services.users.UsersViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +38,12 @@ class MainActivity : AppCompatActivity() {
         )
         ServiceLocator.registerService("Storage",StorageImpl(this))
         ServiceLocator.registerService("UserManager", UserManager())
-
+        ServiceLocator.registerService("UsersViewModel",
+            ViewModelProvider(
+                this,
+                UsersViewModelFactory()
+            )[UsersViewModel::class.java]
+        )
     }
     private fun openFragment(fragment: Fragment) {
         ServiceLocator.getService<Router>("Router")?.addFragment(fragment, true)

@@ -26,10 +26,7 @@ class StorageImpl(context: Context):Storage {
     override fun getUserId(): Int {
         var id = preferences.getString("id",defaultValue)
         if (id == defaultValue){
-
-            id = ServiceLocator.getService<UserManager>("UserManager")?.setNewUser()
-                saveId(id)
-
+        id = ServiceLocator.getService<UserManager>("UserManager")?.setNewUser()
         }
         Log.d("sdf",id!!)
         return id!!.toInt()
