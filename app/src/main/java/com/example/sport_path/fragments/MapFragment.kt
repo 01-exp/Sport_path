@@ -16,9 +16,13 @@ import com.example.sport_path.databinding.FragmentMapBinding
 import com.example.sport_path.dialogs.ModalBottomSheetDialog
 import com.example.sport_path.services.Router
 import com.example.sport_path.services.ServiceLocator
+import com.example.sport_path.services.Storage
 import com.example.sport_path.services.maps.PlacesViewModel
+import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.Map
+import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.map.TextStyle
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
@@ -31,6 +35,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
     private lateinit var viewModel: PlacesViewModel
     private var currentSport = Utils.Sports[0]
     private var currentPosition = Utils.startPosition
+    var mapObjectTapListenerList = mutableListOf<MapObjectTapListener>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapKitFactory.setApiKey(BuildConfig.API_KEY)
@@ -46,6 +51,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         viewModel.placeList.observe(this) {
             setTestPoints(it)
         }
+        mapView.mapWindow.map.isNightModeEnabled = true
 
         binding.buttonPlus.setOnClickListener {
             currentPosition = CameraPosition(
@@ -75,7 +81,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         binding.button.setOnClickListener {
             ServiceLocator.getService<ProfileFragment>("ProfileFragment")
                 ?.let { router.replaceFragment(it, true) }
-
+            ServiceLocator.getService<Storage>("Storage")?.getUserId()
         }
     }
 
@@ -96,22 +102,15 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
     private fun setTestPoints(placeList: List<Place>) {
         mapView.mapWindow.map.mapObjects.clear()
         val imageProvider = ImageProvider.fromResource(context, R.drawable.icon)
-        val style = TextStyle().apply {
-            size = 13.0f
-            placement = TextStyle.Placement.TOP
-        }
 
         for (place in placeList) {
+            val tapListener = MapObjectTapListener{_,_-> goTo(place)}
+            mapObjectTapListenerList.add(tapListener)
             mapView.mapWindow.map.mapObjects.addPlacemark().apply {
                 geometry = place.point
                 setIcon(imageProvider)
-                setText(place.text, style)
-                addTapListener{ _, _ -> goTo(place) }
-
-
+                addTapListener(tapListener)
             }
-            
-
         }
     }
 

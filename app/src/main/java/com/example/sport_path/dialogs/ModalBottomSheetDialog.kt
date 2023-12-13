@@ -2,32 +2,31 @@ package com.example.sport_path.dialogs
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
-import android.widget.NumberPicker
 import com.example.sport_path.data_structures.Place
 import com.example.sport_path.databinding.FragmentModalBottomSheetBinding
-import com.example.sport_path.services.maps.SportAdapter
+import com.example.sport_path.services.ServiceLocator
+import com.example.sport_path.services.users.UserManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
-import java.time.Month
-import java.time.Year
 import java.util.Calendar
 
-class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragment(),DatePickerDialog.OnDateSetListener {
+class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragment(),
+    DatePickerDialog.OnDateSetListener,
+    com.example.sport_path.dialogs.TimePickerDialog.onClickListener {
     lateinit var binding: FragmentModalBottomSheetBinding
-    lateinit var date :String
-    lateinit var time :String
+    lateinit var date: String
+    lateinit var time: String
+    lateinit var timePickerDialog: com.example.sport_path.dialogs.TimePickerDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentModalBottomSheetBinding.inflate(layoutInflater)
-        binding.nameTextView.text = place.text
+        binding.nameTextView.text = place.address
 
 
 
@@ -43,16 +42,19 @@ class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragme
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
-        val minDateUnix = SimpleDateFormat("dd/MM/yyyy").parse("${day}/${month + 1}/${year}")
-        val maxDateUnix = SimpleDateFormat("dd/MM/yyyy").parse("${day + 30}/${month + 1}/${year}")
+        val minDateUnix = SimpleDateFormat("dd.MM.yyyy").parse("${day}.${month + 1}.${year}")
+        val maxDateUnix = SimpleDateFormat("dd.MM.yyyy").parse("${day + 30}.${month + 1}.${year}")
 
         DatePickerDialog(
             requireContext(),
             { _, myYear, myMonth, myDay ->
-                date = "${myDay}/${myMonth}/${myYear}"
-                showTimePickerDialog(calendar)
-            }
-            , year, month, day
+                date = "${myDay}.${myMonth + 1}.${myYear}"
+//                showTimePickerDialog(calendar)
+//                val timePicker = TimePickerFragment(date)
+//                timePicker.show(parentFragmentManager, "timePicker")
+                showTimePickerDialog()
+
+            }, year, month, day
         ).apply {
             if (minDateUnix != null && maxDateUnix != null) {
                 datePicker.minDate = minDateUnix.time
@@ -64,25 +66,39 @@ class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragme
         }
 
 
-
     }
 
-    fun showTimePickerDialog(calendar: Calendar){
-        val hour = calendar.get(Calendar.HOUR)
-        val minute = calendar.get(Calendar.MINUTE)
 
-        TimePickerDialog(
-            requireContext(),
-            { _, hourOfDay, _ ->
-                date += " $hourOfDay:00"
-                Log.d("dsff", date.toString())
+    private fun showTimePickerDialog() {
 
 
-            }, hour, minute, true
-        ).show()
+        timePickerDialog = object : com.example.sport_path.dialogs.TimePickerDialog(
+            context, this
+        ) {
 
-
+        }
+        timePickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        timePickerDialog.show()
     }
+//    fun showTimePickerDialog(calendar: Calendar){
+//        val hour = calendar.get(Calendar.HOUR)
+//        val minute = calendar.get(Calendar.MINUTE)
+//        TimePickerDialog
+////        TimePickerDialog(
+////            requireContext(),
+////            { _, hourOfDay, _ ->
+////                date += " $hourOfDay:00"
+////                Log.d("dsff", date.toString())
+////
+////
+////            }, hour, minute, true
+////        ).apply {
+////            show()
+////        }
+//
+//
+//
+//    }
 
 
     override fun onCreateView(
@@ -97,6 +113,14 @@ class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragme
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         TODO("Not yet implemented")
+    }
+
+    override fun onClick(time: String) {
+        date += ' ' + time
+        timePickerDialog.dismiss()
+        ServiceLocator.getService<UserManager>("UserManager")?.setEntry(place.id,date)
+        this.dismiss()
+        Log.d("sdfsd", date)
     }
 }
 

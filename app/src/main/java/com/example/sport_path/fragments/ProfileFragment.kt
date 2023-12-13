@@ -5,23 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.sport_path.data_structures.Entry
+import com.example.sport_path.data_structures.Place
 import com.example.sport_path.databinding.FragmentProfileBinding
 import com.example.sport_path.services.Router
 import com.example.sport_path.services.ServiceLocator
+import com.yandex.mapkit.geometry.Point
 
 
 class ProfileFragment : Fragment() {
 
-    private lateinit var binding : FragmentProfileBinding
+    private lateinit var binding: FragmentProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentProfileBinding.inflate(layoutInflater)
         val router = ServiceLocator.getService<Router>("Router")!!
         binding.button3.setOnClickListener {
             ServiceLocator.getService<MapFragment>("MapFragment")?.let {
-                router.replaceFragment(it,true)
+                router.replaceFragment(it, true)
             }
         }
+    
 
     }
 
@@ -31,6 +35,10 @@ class ProfileFragment : Fragment() {
     ): View {
         return binding.root
     }
+
+
+    
+
 
 
 }

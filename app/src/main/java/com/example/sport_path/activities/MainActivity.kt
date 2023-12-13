@@ -9,22 +9,20 @@ import com.example.sport_path.fragments.MapFragment
 import com.example.sport_path.fragments.ProfileFragment
 import com.example.sport_path.services.Router
 import com.example.sport_path.services.ServiceLocator
-import com.example.sport_path.services.UsersManager
+import com.example.sport_path.services.Storage
+import com.example.sport_path.services.StorageImpl
+import com.example.sport_path.services.users.UserManager
 import com.example.sport_path.services.maps.PlacesViewModel
 import com.example.sport_path.services.maps.PlacesViewModelFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initServices()
+
         ServiceLocator.getService<MapFragment>("MapFragment")?.let { openFragment(it) }
-
-
+        ServiceLocator.getService<Storage>("Storage")?.deleteData()
     }
     private fun initServices() {
         ServiceLocator.registerService("Router", Router(R.id.place_holder, supportFragmentManager))
@@ -36,10 +34,10 @@ class MainActivity : AppCompatActivity() {
                 PlacesViewModelFactory()
             )[PlacesViewModel::class.java]
         )
+        ServiceLocator.registerService("Storage",StorageImpl(this))
+        ServiceLocator.registerService("UserManager", UserManager())
+
     }
-
-
-
     private fun openFragment(fragment: Fragment) {
         ServiceLocator.getService<Router>("Router")?.addFragment(fragment, true)
     }

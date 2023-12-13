@@ -20,7 +20,7 @@ object Utils {
     val Sports = listOf(
         Sport("Баскетбол","basketball", R.drawable.backetball),
         Sport("Футбол","football", R.drawable.soccerball),
-        Sport("Волейбол","valleyball", R.drawable.tennis),
+        Sport("Волейбол","volleyball", R.drawable.tennis),
         Sport("Воркаут","workout", R.drawable.walleyball),
 
     )
