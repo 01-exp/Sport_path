@@ -5,4 +5,6 @@ import java.lang.reflect.Field
 data class Entry(
     val place : Place,
     val startTime: String,
-)
+    val endTime:String
+) {
+}
