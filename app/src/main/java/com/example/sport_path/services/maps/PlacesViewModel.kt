@@ -16,6 +16,7 @@ class PlacesViewModel() : ViewModel() {
 
     private val   placeListMutable : MutableLiveData<List<Place>> = MutableLiveData()
 
+
     val placeList: LiveData<List<Place>> = placeListMutable
 
     fun loadPlaces(sport: Sport){
