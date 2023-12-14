@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         initServices()
 
         ServiceLocator.getService<MapFragment>("MapFragment")?.let { openFragment(it) }
-        ServiceLocator.getService<Storage>("Storage")?.deleteData()
+//        ServiceLocator.getService<Storage>("Storage")?.deleteData()
     }
     private fun initServices() {
         ServiceLocator.registerService("Router", Router(R.id.place_holder, supportFragmentManager))

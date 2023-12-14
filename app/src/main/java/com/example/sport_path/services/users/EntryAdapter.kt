@@ -1,15 +1,18 @@
-package com.example.sport_path.data_structures
+package com.example.sport_path.services.users
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sport_path.R
+import com.example.sport_path.data_structures.Entry
 import com.example.sport_path.databinding.EntryItemBinding
 import java.util.ArrayList
 
-class EntryAdapter: RecyclerView.Adapter<EntryAdapter.EntryHolder>() {
-    val planList = ArrayList <Entry>()
+class EntryAdapter(val entryList: List<Entry>): RecyclerView.Adapter<EntryAdapter.EntryHolder>() {
+
+
+
     class EntryHolder(item:View): RecyclerView.ViewHolder(item) {
         val binding = EntryItemBinding.bind(item)
         fun bind(entry: Entry) = with(binding)
@@ -25,14 +28,11 @@ class EntryAdapter: RecyclerView.Adapter<EntryAdapter.EntryHolder>() {
     }
 
     override fun getItemCount(): Int {
-         return planList.size
+         return entryList.size
     }
 
     override fun onBindViewHolder(holder: EntryHolder, position: Int) {
-        holder.bind(planList[position])
+        holder.bind(entryList[position])
     }
-    fun addEntry(entry: Entry){
-        planList.add(entry)
-        notifyDataSetChanged()
-    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.sport_path.services
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.example.sport_path.services.users.UserManager
@@ -23,6 +24,7 @@ class StorageImpl(context: Context):Storage {
 
     override val defaultValue = "-1"
     val preferences = context.getSharedPreferences("TABLE", Context.MODE_PRIVATE)
+    @SuppressLint("SuspiciousIndentation")
     override fun getUserId(): Int {
         var id = preferences.getString("id",defaultValue)
         if (id == defaultValue){
