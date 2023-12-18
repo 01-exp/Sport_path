@@ -1,9 +1,11 @@
 package com.example.sport_path.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import com.example.sport_path.BuildConfig
 import com.example.sport_path.dialogs.DialogList
@@ -14,10 +16,12 @@ import com.example.sport_path.Utils
 import com.example.sport_path.data_structures.Sport
 import com.example.sport_path.databinding.FragmentMapBinding
 import com.example.sport_path.dialogs.ModalBottomSheetDialog
+import com.example.sport_path.services.FragmentFactory
 import com.example.sport_path.services.Router
 import com.example.sport_path.services.ServiceLocator
 import com.example.sport_path.services.Storage
 import com.example.sport_path.services.maps.PlacesViewModel
+import com.example.sport_path.services.users.UsersViewModel
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.map.CameraPosition
@@ -79,9 +83,11 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
             showSportsDialog()
         }
         binding.button.setOnClickListener {
-            ServiceLocator.getService<ProfileFragment>("ProfileFragment")
-                ?.let { router.replaceFragment(it, true) }
-            ServiceLocator.getService<Storage>("Storage")?.getUserId()
+//            ServiceLocator.getService<ProfileFragment>("ProfileFragment")
+//                ?.let { router.replaceFragment(it, true) }
+            val fragment = ServiceLocator.getService<FragmentFactory>("FragmentFactory")
+                ?.createFragment(FragmentFactory.FRAGMENT_PROFILE)
+            router.replaceFragment(fragment!!,true)
         }
     }
 
@@ -104,7 +110,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         val imageProvider = ImageProvider.fromResource(context, R.drawable.icon)
 
         for (place in placeList) {
-            val tapListener = MapObjectTapListener{_,_-> goTo(place)}
+            val tapListener = MapObjectTapListener { _, _ -> goTo(place) }
             mapObjectTapListenerList.add(tapListener)
             mapView.mapWindow.map.mapObjects.addPlacemark().apply {
                 geometry = place.point
@@ -113,9 +119,11 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
             }
         }
     }
-
+///set_entry/2/18/17.12.2023%20
+//19:00 HTTP/1.1" 200 -
     private fun goTo(place: Place): Boolean {
         val modalBottomSheetFragment = ModalBottomSheetDialog(place)
+
         parentFragmentManager.let {
             modalBottomSheetFragment.show(
                 it,
@@ -162,6 +170,8 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         viewModel.loadPlaces(currentSport)
         dialogList.cancel()
     }
+
+
 
 
 }

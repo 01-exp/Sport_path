@@ -1,6 +1,8 @@
 package com.example.sport_path.services.users
 
+import android.annotation.SuppressLint
 import android.util.Log
+import com.example.sport_path.Utils
 import com.example.sport_path.data_structures.Entry
 import com.example.sport_path.services.ServiceLocator
 import com.example.sport_path.services.Storage
@@ -9,6 +11,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 
 class UserManager {
@@ -54,14 +58,21 @@ class UserManager {
 
 
 
+
+
+
+
     fun setEntry(placeId:Int, time:String){
-        CoroutineScope(Job()).launch {
+
         val userId = ServiceLocator.getService<Storage>("Storage")?.getUserId()
         val apiResponse = URL("https://sportpath.dekked.repl.co/set_entry/$userId/$placeId/$time").readText()
         Log.d("RESP",apiResponse)
-        }
+
 
     }
+
+
+
 
 
 

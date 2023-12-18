@@ -45,7 +45,9 @@ class UsersViewModel() : ViewModel() {
     }
     fun setEntry(placeId: Int,time:String){
         viewModelScope.launch {
-                ServiceLocator.getService<UserManager>("UserManager")?.setEntry(placeId,time)
+            withContext(Dispatchers.IO) {
+                ServiceLocator.getService<UserManager>("UserManager")?.setEntry(placeId, time)
+            }
         }
     }
 }

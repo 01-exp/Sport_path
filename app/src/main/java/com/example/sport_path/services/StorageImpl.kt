@@ -29,8 +29,11 @@ class StorageImpl(context: Context):Storage {
         var id = preferences.getString("id",defaultValue)
         if (id == defaultValue){
         id = ServiceLocator.getService<UserManager>("UserManager")?.setNewUser()
+            saveId(id)
+            Log.d("fsd","я на сервер обращаюсь")
         }
-        Log.d("sdf",id!!)
+
+        Log.d("ФФФФФФФФsdf",id!!)
         return id!!.toInt()
     }
 

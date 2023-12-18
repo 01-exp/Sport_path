@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="К картам"
@@ -28,9 +28,9 @@
             android:layout_height="wrap_content"
             android:text="Профиль"
             android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/button3"
-            app:layout_constraintEnd_toEndOf="@+id/button3"
-            app:layout_constraintStart_toStartOf="@+id/button3"
+            app:layout_constraintBottom_toTopOf="@+id/Button"
+            app:layout_constraintEnd_toEndOf="@+id/Button"
+            app:layout_constraintStart_toStartOf="@+id/Button"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

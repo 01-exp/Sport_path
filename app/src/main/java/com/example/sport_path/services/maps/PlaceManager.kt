@@ -1,11 +1,15 @@
 package com.example.sport_path.services.maps
 
+import android.annotation.SuppressLint
 import android.util.Log
+import com.example.sport_path.Utils
 import com.example.sport_path.data_structures.Place
 import com.example.sport_path.data_structures.Sport
 import com.yandex.mapkit.geometry.Point
 import org.json.JSONObject
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 class PlaceManager {
 
@@ -29,6 +33,26 @@ class PlaceManager {
         }
         return placeMutableList
 
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun getPlaceOnline(fieldId:Int):List<Pair<String,Int>>{
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val date ="${day}.${month+1}.${year}"
+        val apiResponse = URL("https://sportpath.dekked.repl.co/court_online/$fieldId/$date").readText()
+        val data = JSONObject(apiResponse).getJSONObject("data")
+        val placeOnlineList = mutableListOf<Pair<String,Int>>()
+        for (timePoint in Utils.timePoints){
+            val onlineCount = data.getInt(timePoint)
+            placeOnlineList.add(Pair(timePoint,onlineCount))
+        }
+        Log.d("getPlaceonline", (date?:"почемута нул").toString())
+
+
+        return placeOnlineList
     }
 
 
