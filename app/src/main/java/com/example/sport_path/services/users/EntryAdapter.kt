@@ -7,9 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sport_path.R
 import com.example.sport_path.data_structures.Entry
 import com.example.sport_path.databinding.EntryItemBinding
-import java.util.ArrayList
 
-class EntryAdapter(val entryList: List<Entry>): RecyclerView.Adapter<EntryAdapter.EntryHolder>() {
+class EntryAdapter(val entryList: List<String>): RecyclerView.Adapter<EntryAdapter.EntryHolder>() {
 
 
 
