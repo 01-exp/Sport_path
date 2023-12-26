@@ -3,6 +3,8 @@ package com.example.sport_path.services
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import com.example.sport_path.Utils
+import com.example.sport_path.data_structures.Sport
 import com.example.sport_path.services.users.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -16,6 +18,10 @@ interface Storage{
     fun saveId(id:String?)
 
     fun deleteData()
+
+    fun saveCurrentSport(sportName: String)
+
+    fun getCurrentSport():Sport
 
 }
 
@@ -34,7 +40,7 @@ class StorageImpl(context: Context):Storage {
         }
 
         Log.d("ФФФФФФФФsdf",id!!)
-        return id!!.toInt()
+        return id.toInt()
     }
 
     override fun saveId(id: String?) {
@@ -48,6 +54,23 @@ class StorageImpl(context: Context):Storage {
         editor?.clear()
         editor?.apply()
     }
+
+
+    override fun saveCurrentSport(sportName: String){
+        val editor = preferences?.edit()
+        Utils.Sports.forEach{
+            if( it.name == sportName){
+                editor?.putInt("sportId",Utils.Sports.indexOf(it))
+                editor?.apply()
+
+
+            }
+
+        }
+    }
+
+    override fun getCurrentSport()= Utils.Sports[preferences?.getInt("sportId",0)!!]
+
 
 
 }

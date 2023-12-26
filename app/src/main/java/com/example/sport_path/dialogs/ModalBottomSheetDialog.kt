@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.example.sport_path.Utils
 import com.example.sport_path.data_structures.Place
 import com.example.sport_path.databinding.FragmentModalBottomSheetBinding
 import com.example.sport_path.services.ServiceLocator
@@ -17,6 +19,7 @@ import com.example.sport_path.services.maps.PlacesViewModel
 import com.example.sport_path.services.maps.PlacesViewModelFactory
 import com.example.sport_path.services.users.UserManager
 import com.example.sport_path.services.users.UsersViewModel
+import com.example.sport_path.services.users.WifiChecker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -31,28 +34,36 @@ class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragme
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentModalBottomSheetBinding.inflate(layoutInflater)
-        binding.nameTextView.text = place.address
+        binding.nameTextView.text = Utils.cutAddress(place.address)
 
         val placesViewModel = ViewModelProvider(
             this,
             PlacesViewModelFactory()
         )[PlacesViewModel::class.java]
 
-        placesViewModel.placeOnlineList.observe(this){
+        placesViewModel.placeOnlineList.observe(this) {
             showPlaceOnlineDialog(it)
         }
 
         binding.doEntryButton.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            showDatePickerDialog(calendar)
+            if (WifiChecker.isInternetConnected(requireContext())) {
+                val calendar = Calendar.getInstance()
+                showDatePickerDialog(calendar)
+            } else {
+                Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
+            }
         }
         binding.onlineButton.setOnClickListener {
-            placesViewModel.loadPlaceOnline(place.id)
+            if (WifiChecker.isInternetConnected(requireContext())) {
+                placesViewModel.loadPlaceOnline(place.id)
+            } else {
+                Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
+            }
 
         }
     }
 
-    fun showPlaceOnlineDialog(fieldOnlineList: List<Pair<String,Int>>){
+    fun showPlaceOnlineDialog(fieldOnlineList: List<Pair<String, Int>>) {
 
         val fieldOnlineListDialog = object : PlaceOnlineDialog(
             context,
@@ -145,7 +156,7 @@ class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragme
     override fun onClick(time: String) {
         date += ' ' + time
         timePickerDialog.dismiss()
-        ServiceLocator.getService<UsersViewModel>("UsersViewModel")?.setEntry(place.id,date)
+        ServiceLocator.getService<UsersViewModel>("UsersViewModel")?.setEntry(place.id, date)
         this.dismiss()
         Log.d("sdfsd", date)
     }

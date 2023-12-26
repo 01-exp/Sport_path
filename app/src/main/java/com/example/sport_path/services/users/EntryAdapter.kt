@@ -3,35 +3,66 @@ package com.example.sport_path.services.users
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sport_path.R
+import com.example.sport_path.Utils
 import com.example.sport_path.data_structures.Entry
-import com.example.sport_path.databinding.EntryItemBinding
 
-class EntryAdapter(val entryList: List<String>): RecyclerView.Adapter<EntryAdapter.EntryHolder>() {
+class EntryAdapter(val entryList: List<Entry>, val listener: OnDeleteButtonClickListener) :
+    RecyclerView.Adapter<EntryAdapter.EntryHolder>() {
 
 
 
-    class EntryHolder(item:View): RecyclerView.ViewHolder(item) {
-        val binding = EntryItemBinding.bind(item)
-        fun bind(entry: Entry) = with(binding)
+    inner class EntryHolder(item: View) : RecyclerView.ViewHolder(item), View.OnClickListener {
+        val addressTextView: TextView = item.findViewById(R.id.address)
+        val timeTextView: TextView = item.findViewById(R.id.time)
+        val dateTextView: TextView = item.findViewById(R.id.date)
+        val sportIcon: ImageView = item.findViewById(R.id.icon_sport)
+        private val deleteButton: ImageButton = item.findViewById(R.id.delete_button)
 
-        {
-           textView2.text = entry.startTime
+        init {
+            deleteButton.setOnClickListener(::onClick)
         }
+
+        override fun onClick(v: View?) {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onDeleteButtonClick(
+                    entryList[position],position
+                )
+
+
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EntryHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.entry_item,parent, false)
-        return  EntryHolder(view)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.entry_item, parent, false)
+        return EntryHolder(view)
     }
 
     override fun getItemCount(): Int {
-         return entryList.size
+        return entryList.size
     }
 
     override fun onBindViewHolder(holder: EntryHolder, position: Int) {
-        holder.bind(entryList[position])
+        val element = entryList[position]
+        val dateAndTime = element.time.split(" ")
+        holder.addressTextView.text = Utils.cutAddress(element.placeAdress)
+        holder.timeTextView.text = dateAndTime[1]
+
+        holder.dateTextView.text = Utils.formattedDate(dateAndTime[0])
+
+
+        holder.sportIcon.setImageResource(Utils.getIconBySport(element.placeSport))
+    }
+
+    interface OnDeleteButtonClickListener {
+        fun onDeleteButtonClick(entry: Entry,position: Int)
     }
 
 }

@@ -3,8 +3,10 @@ package com.example.sport_path.data_structures
 import java.lang.reflect.Field
 
 data class Entry(
-    val place : Place,
-    val startTime: String,
-    val endTime:String
-) {
-}
+    val placeId : Int,
+    val placeAdress: String,
+    val placeSport: String,
+    val time: String,
+    val id:Int
+)
+

@@ -1,5 +1,6 @@
 package com.example.sport_path.services.users
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,8 +20,8 @@ class UsersViewModel() : ViewModel() {
     private val   userIdMutable : MutableLiveData<Int> = MutableLiveData()
     val userId: LiveData<Int> = userIdMutable
 
-    private val entriesListMutable: MutableLiveData<List<Entry>> = MutableLiveData()
-    val entriesList: LiveData<List<Entry>> =  entriesListMutable
+    private val entriesListMutable: MutableLiveData<MutableList<Entry>> = MutableLiveData()
+    val entriesList: LiveData<MutableList<Entry>> =  entriesListMutable
 
 
     fun getUserId(){
@@ -35,12 +36,14 @@ class UsersViewModel() : ViewModel() {
 
 
 
-    fun getUserEntries(id:Int){
+    fun getUserEntries(){
         viewModelScope.launch {
+
             val entriesList = withContext(Dispatchers.IO) {
-                ServiceLocator.getService<UserManager>("UserManager")?.getUserEntries(id)
+                ServiceLocator.getService<UserManager>("UserManager")?.getUserEntries()
             }
-            entriesListMutable.value = entriesList!!
+            Log.d("mvvv",entriesList.toString())
+            entriesListMutable.value = entriesList
         }
     }
     fun setEntry(placeId: Int,time:String){
@@ -50,6 +53,21 @@ class UsersViewModel() : ViewModel() {
             }
         }
     }
+
+    fun deleteEntry(id:Int){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                ServiceLocator.getService<UserManager>("UserManager")?.delete_entry(id)
+
+            }
+            val entries = entriesList.value
+            entries?.removeAt(id)
+            entriesListMutable.value = entries
+
+
+        }
+    }
+
 }
 
 class UsersViewModelFactory() :

@@ -14,6 +14,7 @@ import java.util.Calendar
 class PlaceManager {
 
     fun getPlacesOnSport(sport: Sport):List<Place> {
+        Log.d("sp",sport.toString())
         val apiResponse = URL("https://sportpath.dekked.repl.co/getfieldbysport/"+sport.nameEn).readText()
         Log.d("resp",apiResponse)
         val data = JSONObject(apiResponse).getJSONArray("data")
