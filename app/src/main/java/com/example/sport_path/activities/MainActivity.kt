@@ -22,6 +22,7 @@ import com.example.sport_path.services.maps.PlacesViewModel
 import com.example.sport_path.services.maps.PlacesViewModelFactory
 import com.example.sport_path.services.users.UsersViewModel
 import com.example.sport_path.services.users.UsersViewModelFactory
+import com.example.sport_path.services.users.WifiChecker
 import com.yandex.mapkit.MapKitFactory
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +35,13 @@ class MainActivity : AppCompatActivity() {
         ServiceLocator.getService<FragmentFactory>("FragmentFactory")?.createFragment(FragmentFactory.FRAGMENT_MAP).let {
             openFragment(it!!)
         }
+//        val viewModel = ServiceLocator.getService<UsersViewModel>("UsersViewModel")
+//        viewModel?.entriesList?.observe(this){
+//            ServiceLocator.getService<Storage>("Storage")?.entriesList = it
+//        }
+//        if (WifiChecker.isInternetConnected(this)){
+//            viewModel?.getUserEntries()
+//        }
     }
     private fun initServices() {
         ServiceLocator.registerService("FragmentFactory",FragmentFactory())
@@ -55,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
     private fun openFragment(fragment: Fragment) {
-        ServiceLocator.getService<Router>("Router")?.addFragment(fragment, true)
+        ServiceLocator.getService<Router>("Router")?.addFragment(fragment, false)
     }
 
 }

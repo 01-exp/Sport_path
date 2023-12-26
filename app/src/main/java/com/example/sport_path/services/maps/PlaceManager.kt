@@ -14,9 +14,9 @@ import java.util.Calendar
 class PlaceManager {
 
     fun getPlacesOnSport(sport: Sport):List<Place> {
-        Log.d("sp",sport.toString())
+        Log.d("mlog",sport.toString())
         val apiResponse = URL("https://sportpath.dekked.repl.co/getfieldbysport/"+sport.nameEn).readText()
-        Log.d("resp",apiResponse)
+        Log.d("mlog",apiResponse)
         val data = JSONObject(apiResponse).getJSONArray("data")
         val placeMutableList = mutableListOf<Place>()
         for (i in 0 until data.length()){
@@ -50,7 +50,7 @@ class PlaceManager {
             val onlineCount = data.getInt(timePoint)
             placeOnlineList.add(Pair(timePoint,onlineCount))
         }
-        Log.d("getPlaceonline", (date?:"почемута нул").toString())
+        Log.d("mlog", (date?:"почемута нул").toString())
 
 
         return placeOnlineList

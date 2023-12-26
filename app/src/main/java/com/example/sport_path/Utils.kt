@@ -1,8 +1,10 @@
 package com.example.sport_path
 
+import android.util.Log
 import com.example.sport_path.data_structures.Sport
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
+import java.lang.IndexOutOfBoundsException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -26,7 +28,7 @@ object Utils {
         Sport("Воркаут", "workout", R.drawable.gym),
         Sport("Теннис", "tennis", R.drawable.tennis),
         Sport("Cкейтбординг", "skate_park", R.drawable.skateboard),
-        )
+    )
 
     val startPosition = CameraPosition(
         Point(47.237422, 39.712262),
@@ -81,20 +83,29 @@ object Utils {
         return Sports[0].icon
     }
 
-    fun cutAddress(address: String):String {
-        val steets = listOf("улица" ,"площадь", "переулок" ,"проспект")
+    fun cutAddress(address: String): String {
+        val steets = listOf("улица", "площадь", "переулок", "проспект", "бульвар")
 
-        val splitAddress = address.replace("ул.","улица ").split(",")
+        val splitAddress = address
+            .replace("ул.", "улица ")
+            .removePrefix("Ростов-на-Дону,")
+            .split(",")
         var word = ""
-        splitAddress.forEach{
-            steets.forEach{ street ->
-                if(street in it.lowercase()){
+        splitAddress.forEach {
+            steets.forEach { street ->
+                if (street in it.lowercase()) {
                     word = it
                 }
             }
         }
-        return word+ " "+splitAddress[splitAddress.indexOf(word)+1]
+//        Log.d("mlog", "$address  $word $splitAddress")
+        try {
+//            Log.d("mlog", word + " ," + splitAddress[splitAddress.indexOf(word) + 1]+"123")
+            return word + " " + splitAddress[splitAddress.indexOf(word) + 1]
 
+        } catch (e: IndexOutOfBoundsException) {
+            return word
+        }
     }
 
     fun formattedDate(date: String): String {
@@ -117,7 +128,7 @@ object Utils {
             else -> "Декабря"
         }
 
-            // улица площаль переулок проспект
+        // улица площаль переулок проспект
 
         return "${dateSplit[0]} $month"
     }

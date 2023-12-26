@@ -58,7 +58,7 @@ class ProfileFragment : Fragment(), EntryAdapter.OnDeleteButtonClickListener {
     }
 
     fun setUpRecyclerView(entryList: List<Entry>) {
-        Log.d("dsf", "pizda")
+        Log.d("mlog", "pizda")
         val recyclerView = binding.rvEntryList
         val adapter = EntryAdapter(entryList, this@ProfileFragment)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -70,7 +70,18 @@ class ProfileFragment : Fragment(), EntryAdapter.OnDeleteButtonClickListener {
     }
 
     override fun onDeleteButtonClick(entry: Entry, position: Int) {
-        viewModel.deleteEntry(position)
+        if (WifiChecker.isInternetConnected(requireContext())) {
+            viewModel.deleteEntry(entry.id, position)
+            if (position == 0) {
+                binding.stateTextView.isVisible = true
+
+            }
+        } else {
+            binding.stateTextView.isVisible = true
+            Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
+
+        }
+
     }
 
 

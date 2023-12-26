@@ -11,6 +11,7 @@ import android.widget.DatePicker
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.sport_path.Utils
+import com.example.sport_path.data_structures.Entry
 import com.example.sport_path.data_structures.Place
 import com.example.sport_path.databinding.FragmentModalBottomSheetBinding
 import com.example.sport_path.services.ServiceLocator
@@ -24,13 +25,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragment(),
+class ModalBottomSheetDialog(private var place: Place,var entriesList: MutableList<Entry>) : BottomSheetDialogFragment(),
     DatePickerDialog.OnDateSetListener,
-    com.example.sport_path.dialogs.TimePickerDialog.onClickListener {
+    TimePickerDialog.onClickListener {
     lateinit var binding: FragmentModalBottomSheetBinding
     lateinit var date: String
     lateinit var time: String
-    lateinit var timePickerDialog: com.example.sport_path.dialogs.TimePickerDialog
+    lateinit var timePickerDialog: TimePickerDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentModalBottomSheetBinding.inflate(layoutInflater)
@@ -44,6 +46,7 @@ class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragme
         placesViewModel.placeOnlineList.observe(this) {
             showPlaceOnlineDialog(it)
         }
+
 
         binding.doEntryButton.setOnClickListener {
             if (WifiChecker.isInternetConnected(requireContext())) {
@@ -143,7 +146,7 @@ class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragme
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this frfasagment
 
 //        return inflater.inflate(R.layout.fragment_modal_bottom_sheet, container, false)
         return binding.root
@@ -156,9 +159,22 @@ class ModalBottomSheetDialog(private var place: Place) : BottomSheetDialogFragme
     override fun onClick(time: String) {
         date += ' ' + time
         timePickerDialog.dismiss()
-        ServiceLocator.getService<UsersViewModel>("UsersViewModel")?.setEntry(place.id, date)
+        if (WifiChecker.isInternetConnected(requireContext())){
+        if (true !in entriesList.map {place.id == it.placeId || it.time == date }){
+
+            ServiceLocator.getService<UsersViewModel>("UsersViewModel")!!.setEntry(place.id,date)
+        }
+        else{
+            Toast.makeText(context, "Такая запись уже существует", Toast.LENGTH_LONG).show()
+        }}
+        else{
+            Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
+
+        }
+
+
         this.dismiss()
-        Log.d("sdfsd", date)
+        Log.d("mlog", date)
     }
 }
 

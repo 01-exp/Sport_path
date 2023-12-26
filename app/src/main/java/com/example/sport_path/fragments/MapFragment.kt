@@ -11,6 +11,7 @@ import com.example.sport_path.data_structures.Place
 import com.example.sport_path.R
 import com.example.sport_path.services.maps.SportAdapter
 import com.example.sport_path.Utils
+import com.example.sport_path.data_structures.Entry
 import com.example.sport_path.data_structures.Sport
 import com.example.sport_path.databinding.FragmentMapBinding
 import com.example.sport_path.dialogs.ModalBottomSheetDialog
@@ -19,6 +20,7 @@ import com.example.sport_path.services.Router
 import com.example.sport_path.services.ServiceLocator
 import com.example.sport_path.services.Storage
 import com.example.sport_path.services.maps.PlacesViewModel
+import com.example.sport_path.services.users.UsersViewModel
 import com.example.sport_path.services.users.WifiChecker
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
@@ -36,7 +38,11 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
     private lateinit var viewModel: PlacesViewModel
     private var currentSport = Utils.Sports[0]
     private var currentPosition = Utils.startPosition
-    var mapObjectTapListenerList = mutableListOf<MapObjectTapListener>()
+    private var mapObjectTapListenerList = mutableListOf<MapObjectTapListener>()
+
+
+    private lateinit var usersViewModel: UsersViewModel
+    private lateinit var entriesList: MutableList<Entry>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,7 +51,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         val router = ServiceLocator.getService<Router>("Router")!!
         val storage = ServiceLocator.getService<Storage>("Storage")!!
         viewModel = ServiceLocator.getService<PlacesViewModel>("PlacesViewModel")!!
-
+        usersViewModel = ServiceLocator.getService("UsersViewModel")!!
 
         mapView = binding.mapView
         mapView.mapWindow.map.isNightModeEnabled = true
@@ -54,13 +60,18 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         viewModel.placeList.observe(this) {
             setTestPoints(it)
         }
+        usersViewModel.entriesList.observe(this) {
+            entriesList = it
+        }
+        usersViewModel.getUserEntries()
+
+
         val currentSport = storage.getCurrentSport()
-        if (WifiChecker.isInternetConnected(requireContext())){
+        if (WifiChecker.isInternetConnected(requireContext())) {
             viewModel.loadPlaces(currentSport)
             setUpSportCard(currentSport)
-        }
-        else{
-            Toast.makeText(context,"Нет подключения к интернету",Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
         }
 
         binding.buttonPlus.setOnClickListener {
@@ -70,7 +81,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
                 /* azimuth = */currentPosition.azimuth,
                 /* tilt = */ currentPosition.tilt
             )
-            setPositionOnMap(currentPosition,Animation(Animation.Type.SMOOTH, 0.5f))
+            setPositionOnMap(currentPosition, Animation(Animation.Type.SMOOTH, 0.5f))
         }
 
         binding.buttonMinus.setOnClickListener {
@@ -80,7 +91,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
                 /* azimuth = */currentPosition.azimuth,
                 /* tilt = */ currentPosition.tilt
             )
-            setPositionOnMap(currentPosition,Animation(Animation.Type.SMOOTH, 0.5f))
+            setPositionOnMap(currentPosition, Animation(Animation.Type.SMOOTH, 0.5f))
         }
 
 
@@ -93,7 +104,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
 //                ?.let { router.replaceFragment(it, true) }
             val fragment = ServiceLocator.getService<FragmentFactory>("FragmentFactory")
                 ?.createFragment(FragmentFactory.FRAGMENT_PROFILE)
-            router.replaceFragment(fragment!!,true)
+            router.replaceFragment(fragment!!, true)
         }
     }
 
@@ -125,10 +136,12 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
             }
         }
     }
-///set_entry/2/18/17.12.2023%20
+
+    ///set_entry/2/18/17.12.2023%20
 //19:00 HTTP/1.1" 200 -
     private fun goTo(place: Place): Boolean {
-        val modalBottomSheetFragment = ModalBottomSheetDialog(place)
+        usersViewModel.getUserEntries()
+        val modalBottomSheetFragment = ModalBottomSheetDialog(place, entriesList)
         val position = CameraPosition(
             place.point,
             /* zoom = */ 17f,
@@ -150,18 +163,17 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
     }
 
 
-    private fun setPositionOnMap(position: CameraPosition, animation: Animation? = null ) {
-        if(animation  != null){
+    private fun setPositionOnMap(position: CameraPosition, animation: Animation? = null) {
+        if (animation != null) {
             mapView.mapWindow.map.move(
                 position,
                 animation,
                 null
             )
-        }
-        else{
-        mapView.mapWindow.map.move(
-            position
-        )
+        } else {
+            mapView.mapWindow.map.move(
+                position
+            )
         }
     }
 
@@ -187,24 +199,21 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
     }
 
     override fun onItemCLick(sport: Sport) {
-        if (WifiChecker.isInternetConnected(requireContext())){
+        if (WifiChecker.isInternetConnected(requireContext())) {
             currentSport = sport
             setUpSportCard(sport)
             viewModel.loadPlaces(currentSport)
             ServiceLocator.getService<Storage>("Storage")?.saveCurrentSport(sport.name)
-        }
-        else{
-            Toast.makeText(context,"Нед подключения к интернету", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(context, "Нед подключения к интернету", Toast.LENGTH_LONG).show()
         }
         dialogList.cancel()
     }
 
-    fun setUpSportCard(sport: Sport){
+    fun setUpSportCard(sport: Sport) {
         binding.sportName.text = sport.name
         binding.sportImage.setImageResource(sport.icon)
     }
-
-
 
 
 }

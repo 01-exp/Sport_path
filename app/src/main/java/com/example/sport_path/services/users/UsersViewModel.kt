@@ -42,26 +42,31 @@ class UsersViewModel() : ViewModel() {
             val entriesList = withContext(Dispatchers.IO) {
                 ServiceLocator.getService<UserManager>("UserManager")?.getUserEntries()
             }
-            Log.d("mvvv",entriesList.toString())
             entriesListMutable.value = entriesList
         }
     }
+
+
     fun setEntry(placeId: Int,time:String){
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 ServiceLocator.getService<UserManager>("UserManager")?.setEntry(placeId, time)
             }
+            ServiceLocator.getService<Storage>("Storage")?.entriesList?.apply {
+
+            }
+
         }
     }
 
-    fun deleteEntry(id:Int){
+    fun deleteEntry(id:Int,position:Int){
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 ServiceLocator.getService<UserManager>("UserManager")?.delete_entry(id)
 
             }
             val entries = entriesList.value
-            entries?.removeAt(id)
+            entries?.removeAt(position)
             entriesListMutable.value = entries
 
 

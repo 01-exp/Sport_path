@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import com.example.sport_path.R
+import kotlin.time.Duration.Companion.hours
 
 // Define a DialogList class that extends Dialog
 abstract class TimePickerDialog(
@@ -28,6 +29,7 @@ abstract class TimePickerDialog(
         setCancelable(true)
         val hoursSpinner = findViewById<Spinner>(R.id.hours_spinner)
         val minutsSpinner = findViewById<Spinner>(R.id.minuts_spinner)
+
 
 
 

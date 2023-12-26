@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.example.sport_path.Utils
+import com.example.sport_path.data_structures.Entry
 import com.example.sport_path.data_structures.Sport
 import com.example.sport_path.services.users.UserManager
 import kotlinx.coroutines.CoroutineScope
@@ -23,10 +24,15 @@ interface Storage{
 
     fun getCurrentSport():Sport
 
+    var entriesList : MutableList<Entry>
+
 }
 
 
 class StorageImpl(context: Context):Storage {
+
+
+    override var entriesList: MutableList<Entry> = mutableListOf()
 
     override val defaultValue = "-1"
     val preferences = context.getSharedPreferences("TABLE", Context.MODE_PRIVATE)
@@ -36,10 +42,10 @@ class StorageImpl(context: Context):Storage {
         if (id == defaultValue){
         id = ServiceLocator.getService<UserManager>("UserManager")?.setNewUser()
             saveId(id)
-            Log.d("fsd","я на сервер обращаюсь")
+            Log.d("mlog","я на сервер обращаюсь")
         }
 
-        Log.d("ФФФФФФФФsdf",id!!)
+        Log.d("mlog",id!!)
         return id.toInt()
     }
 

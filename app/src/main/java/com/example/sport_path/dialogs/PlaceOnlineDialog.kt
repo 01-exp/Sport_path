@@ -6,6 +6,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sport_path.R
@@ -38,13 +40,21 @@ abstract class PlaceOnlineDialog(
         // by pressing the back button
         setCancelable(true)
         // Set up the RecyclerView in the dialog
-        setUpRecyclerView(view)
+        val spinner = findViewById<Spinner>(R.id.time_spinner)
+        ArrayAdapter.createFromResource(
+            context,
+            R.array.hours_and_minuts_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears.
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner.
+            spinner.adapter = adapter
+        }
     }
 
     // This method sets up the RecyclerView in the dialog
     private fun setUpRecyclerView(view: View) {
-        val recyclerView = view.findViewById<RecyclerView>(R.id.rvListOnline)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = adapter
+
     }
 }

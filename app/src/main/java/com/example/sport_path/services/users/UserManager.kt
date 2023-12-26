@@ -19,15 +19,15 @@ import java.util.Calendar
 class UserManager {
 
 
-    val storage = ServiceLocator.getService<Storage>("Storage")
+    val storage = ServiceLocator.getService<Storage>("Storage")!!
     fun setNewUser():String {
        val apiResponse =  URL("https://sportpath.dekked.repl.co/newuser").readText()
-        Log.d("fdsff",apiResponse)
+        Log.d("mlog",apiResponse)
         return apiResponse
     }
 
     fun getUserEntries():MutableList<Entry> {
-        val id = storage?.getUserId()
+        val id = storage.getUserId()
         val apiResponse = URL("https://sportpath.dekked.repl.co/get_entries/$id").readText()
         if (apiResponse == "User not found") {
             throw Exception("User not found")
@@ -49,7 +49,7 @@ class UserManager {
 
             }
         }
-        Log.d("entries",entries.toString())
+        Log.d("mlog",entries.toString())
         return entries
     }
 
@@ -61,16 +61,16 @@ class UserManager {
 
     fun setEntry(placeId:Int, time:String){
 
-        val userId = storage?.getUserId()
+        val userId = storage.getUserId()
         val apiResponse = URL("https://sportpath.dekked.repl.co/set_entry/$userId/$placeId/$time").readText()
-        Log.d("RESP",apiResponse)
+        Log.d("mlogEn",apiResponse)
 
 
     }
 
     fun delete_entry(entryId:Int){
         val apiResponse = URL("https://sportpath.dekked.repl.co/delete_entry/$entryId").readText()
-        Log.d("RESP",apiResponse)
+        Log.d("mlog",apiResponse)
     }
 
 
