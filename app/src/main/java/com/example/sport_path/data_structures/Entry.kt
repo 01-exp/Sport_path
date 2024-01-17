@@ -1,12 +1,18 @@
 package com.example.sport_path.data_structures
 
-import java.lang.reflect.Field
+import com.google.gson.annotations.SerializedName
+
 
 data class Entry(
-    val placeId : Int,
-    val placeAdress: String,
+    @SerializedName("court_address")
+    val placeAddress: String,
+    @SerializedName("court_id")
+    val placeId: Int,
+    @SerializedName("court_sport")
     val placeSport: String,
-    val time: String,
-    val id:Int
+    @SerializedName("entry_id")
+    val id: Int,
+    @SerializedName("entry_time")
+    val time: String
 )
 

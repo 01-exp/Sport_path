@@ -1,4 +1,4 @@
-package com.example.sport_path.dialogs
+package com.example.sport_path.fragments.dialogs
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
@@ -9,23 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import com.example.sport_path.Utils
 import com.example.sport_path.data_structures.Entry
 import com.example.sport_path.data_structures.Place
 import com.example.sport_path.databinding.FragmentModalBottomSheetBinding
 import com.example.sport_path.services.ServiceLocator
-import com.example.sport_path.services.maps.PlaceOnlineAdapter
-import com.example.sport_path.services.maps.PlacesViewModel
-import com.example.sport_path.services.maps.PlacesViewModelFactory
-import com.example.sport_path.services.users.UserManager
+import com.example.sport_path.services.maps.PlaceViewModel
 import com.example.sport_path.services.users.UsersViewModel
 import com.example.sport_path.services.users.WifiChecker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-class ModalBottomSheetDialog(private var place: Place,var entriesList: MutableList<Entry>) : BottomSheetDialogFragment(),
+class ModalBottomSheetFragment(private var place: Place, var entriesList: MutableList<Entry>) : BottomSheetDialogFragment(),
     DatePickerDialog.OnDateSetListener,
     TimePickerDialog.onClickListener {
     lateinit var binding: FragmentModalBottomSheetBinding
@@ -38,10 +34,8 @@ class ModalBottomSheetDialog(private var place: Place,var entriesList: MutableLi
         binding = FragmentModalBottomSheetBinding.inflate(layoutInflater)
         binding.nameTextView.text = Utils.cutAddress(place.address)
 
-        val placesViewModel = ViewModelProvider(
-            this,
-            PlacesViewModelFactory()
-        )[PlacesViewModel::class.java]
+        val placesViewModel = ServiceLocator.getService<PlaceViewModel>("PlaceViewModel")!!
+
 
         placesViewModel.placeOnlineList.observe(this) {
             showPlaceOnlineDialog(it)
@@ -66,16 +60,16 @@ class ModalBottomSheetDialog(private var place: Place,var entriesList: MutableLi
         }
     }
 
-    fun showPlaceOnlineDialog(fieldOnlineList: List<Pair<String, Int>>) {
+    fun showPlaceOnlineDialog(placeOnlineList: Map<String, Int>) {
 
-        val fieldOnlineListDialog = object : PlaceOnlineDialog(
+        val placeOnlineDialog = object : PlaceOnlineDialog(
             context,
-            PlaceOnlineAdapter(fieldOnlineList)
+            placeOnlineList
         ) {
 
         }
-        fieldOnlineListDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        fieldOnlineListDialog.show()
+        placeOnlineDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        placeOnlineDialog.show()
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -113,7 +107,7 @@ class ModalBottomSheetDialog(private var place: Place,var entriesList: MutableLi
     private fun showTimePickerDialog() {
 
 
-        timePickerDialog = object : com.example.sport_path.dialogs.TimePickerDialog(
+        timePickerDialog = object : TimePickerDialog(
             context, this
         ) {
 
@@ -160,7 +154,7 @@ class ModalBottomSheetDialog(private var place: Place,var entriesList: MutableLi
         date += ' ' + time
         timePickerDialog.dismiss()
         if (WifiChecker.isInternetConnected(requireContext())){
-        if (true !in entriesList.map {place.id == it.placeId || it.time == date }){
+        if (true !in entriesList.map {(place.id == it.placeId )and ( it.time == date) }){
 
             ServiceLocator.getService<UsersViewModel>("UsersViewModel")!!.setEntry(place.id,date)
         }

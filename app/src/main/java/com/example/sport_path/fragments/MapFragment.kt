@@ -1,12 +1,13 @@
 package com.example.sport_path.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.sport_path.dialogs.DialogList
+import com.example.sport_path.fragments.dialogs.DialogList
 import com.example.sport_path.data_structures.Place
 import com.example.sport_path.R
 import com.example.sport_path.services.maps.SportAdapter
@@ -14,16 +15,17 @@ import com.example.sport_path.Utils
 import com.example.sport_path.data_structures.Entry
 import com.example.sport_path.data_structures.Sport
 import com.example.sport_path.databinding.FragmentMapBinding
-import com.example.sport_path.dialogs.ModalBottomSheetDialog
-import com.example.sport_path.services.FragmentFactory
+import com.example.sport_path.fragments.dialogs.ModalBottomSheetFragment
+import com.example.sport_path.fragments.dialogs.ProfileBottomSheetDialogFragment
 import com.example.sport_path.services.Router
 import com.example.sport_path.services.ServiceLocator
 import com.example.sport_path.services.Storage
-import com.example.sport_path.services.maps.PlacesViewModel
+import com.example.sport_path.services.maps.PlaceViewModel
 import com.example.sport_path.services.users.UsersViewModel
 import com.example.sport_path.services.users.WifiChecker
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.mapview.MapView
@@ -35,7 +37,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
     private lateinit var dialogList: DialogList
 
 
-    private lateinit var viewModel: PlacesViewModel
+    private lateinit var viewModel: PlaceViewModel
     private var currentSport = Utils.Sports[0]
     private var currentPosition = Utils.startPosition
     private var mapObjectTapListenerList = mutableListOf<MapObjectTapListener>()
@@ -50,25 +52,26 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
 
         val router = ServiceLocator.getService<Router>("Router")!!
         val storage = ServiceLocator.getService<Storage>("Storage")!!
-        viewModel = ServiceLocator.getService<PlacesViewModel>("PlacesViewModel")!!
+        viewModel = ServiceLocator.getService<PlaceViewModel>("PlaceViewModel")!!
         usersViewModel = ServiceLocator.getService("UsersViewModel")!!
 
         mapView = binding.mapView
         mapView.mapWindow.map.isNightModeEnabled = true
-        setPositionOnMap(currentPosition, Animation(Animation.Type.SMOOTH, 1f))
+
 
         viewModel.placeList.observe(this) {
             setTestPoints(it)
+            Log.d("mLog",it.toString()+"233")
         }
         usersViewModel.entriesList.observe(this) {
             entriesList = it
         }
-        usersViewModel.getUserEntries()
 
 
         val currentSport = storage.getCurrentSport()
         if (WifiChecker.isInternetConnected(requireContext())) {
             viewModel.loadPlaces(currentSport)
+            usersViewModel.getUserEntries()
             setUpSportCard(currentSport)
         } else {
             Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
@@ -82,6 +85,8 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
                 /* tilt = */ currentPosition.tilt
             )
             setPositionOnMap(currentPosition, Animation(Animation.Type.SMOOTH, 0.5f))
+
+
         }
 
         binding.buttonMinus.setOnClickListener {
@@ -94,20 +99,42 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
             setPositionOnMap(currentPosition, Animation(Animation.Type.SMOOTH, 0.5f))
         }
 
+        binding.profileButton.setOnClickListener {
+            showProfileDialog()
+        }
+
 
 
         binding.cardView.setOnClickListener {
             showSportsDialog()
         }
         binding.button.setOnClickListener {
-//            ServiceLocator.getService<ProfileFragment>("ProfileFragment")
-//                ?.let { router.replaceFragment(it, true) }
-            val fragment = ServiceLocator.getService<FragmentFactory>("FragmentFactory")
-                ?.createFragment(FragmentFactory.FRAGMENT_PROFILE)
-            router.replaceFragment(fragment!!, true)
+
+//            val fragment = ServiceLocator.getService<FragmentFactory>("FragmentFactory")
+//                ?.createFragment(FragmentFactory.FRAGMENT_PROFILE)
+//            router.replaceFragment(fragment!!, true)
+
+            val fr = EntriesBottomSheetFragment()
+            parentFragmentManager.let {
+                fr.show(
+                    it,
+                    fr.tag
+                )
+            }
         }
     }
 
+
+    private fun showProfileDialog(){
+        val profileBottomSheetDialogFragment = ProfileBottomSheetDialogFragment()
+        parentFragmentManager.let {
+            profileBottomSheetDialogFragment.show(
+                it,
+                profileBottomSheetDialogFragment.tag
+            )
+
+        }
+    }
 
     private fun showSportsDialog() {
         val sportsList = Utils.Sports
@@ -130,7 +157,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
             val tapListener = MapObjectTapListener { _, _ -> goTo(place) }
             mapObjectTapListenerList.add(tapListener)
             mapView.mapWindow.map.mapObjects.addPlacemark().apply {
-                geometry = place.point
+                geometry = Point(place.lat,place.lon)
                 setIcon(imageProvider)
                 addTapListener(tapListener)
             }
@@ -140,10 +167,11 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
     ///set_entry/2/18/17.12.2023%20
 //19:00 HTTP/1.1" 200 -
     private fun goTo(place: Place): Boolean {
+        if (WifiChecker.isInternetConnected(requireContext())) {
         usersViewModel.getUserEntries()
-        val modalBottomSheetFragment = ModalBottomSheetDialog(place, entriesList)
+        val modalBottomSheetFragment = ModalBottomSheetFragment(place, entriesList)
         val position = CameraPosition(
-            place.point,
+            Point(place.lat,place.lon),
             /* zoom = */ 17f,
             /* azimuth = */currentPosition.azimuth,
             /* tilt = */ currentPosition.tilt
@@ -157,7 +185,9 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
                 modalBottomSheetFragment.tag
             )
         }
-
+        } else {
+            Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
+        }
 
         return true
     }
@@ -182,6 +212,7 @@ class MapFragment : Fragment(), SportAdapter.OnItemCLickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setPositionOnMap(currentPosition, Animation(Animation.Type.SMOOTH, 1f))
         return binding.root
     }
 

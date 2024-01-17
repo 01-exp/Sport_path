@@ -1,5 +1,6 @@
 package com.example.sport_path.services.users
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import com.example.sport_path.R
 import com.example.sport_path.Utils
 import com.example.sport_path.data_structures.Entry
 
-class EntryAdapter(val entryList: List<Entry>, val listener: OnDeleteButtonClickListener) :
+class EntryAdapter(val entryList: MutableList<Entry>, val listener: OnDeleteButtonClickListener) :
     RecyclerView.Adapter<EntryAdapter.EntryHolder>() {
 
 
@@ -30,9 +31,10 @@ class EntryAdapter(val entryList: List<Entry>, val listener: OnDeleteButtonClick
         override fun onClick(v: View?) {
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                listener.onDeleteButtonClick(
-                    entryList[position],position
+                Log.d("mLog","$position,${entryList.size}")
+                listener.onDeleteButtonClick(entryList,position,entryList.size
                 )
+
 
 
             }
@@ -52,7 +54,7 @@ class EntryAdapter(val entryList: List<Entry>, val listener: OnDeleteButtonClick
     override fun onBindViewHolder(holder: EntryHolder, position: Int) {
         val element = entryList[position]
         val dateAndTime = element.time.split(" ")
-        holder.addressTextView.text = Utils.cutAddress(element.placeAdress)
+        holder.addressTextView.text = Utils.cutAddress(element.placeAddress)
         holder.timeTextView.text = dateAndTime[1]
 
         holder.dateTextView.text = Utils.formattedDate(dateAndTime[0])
@@ -62,7 +64,7 @@ class EntryAdapter(val entryList: List<Entry>, val listener: OnDeleteButtonClick
     }
 
     interface OnDeleteButtonClickListener {
-        fun onDeleteButtonClick(entry: Entry,position: Int)
+        fun onDeleteButtonClick(entryList:MutableList<Entry>, position: Int, size:Int)
     }
 
 }

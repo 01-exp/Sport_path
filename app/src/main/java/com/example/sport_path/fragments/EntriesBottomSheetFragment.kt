@@ -7,37 +7,37 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sport_path.data_structures.Entry
-import com.example.sport_path.databinding.FragmentProfileBinding
-import com.example.sport_path.services.FragmentFactory
-import com.example.sport_path.services.Router
+import com.example.sport_path.databinding.FragmentEntriesBinding
 import com.example.sport_path.services.ServiceLocator
 import com.example.sport_path.services.users.EntryAdapter
 import com.example.sport_path.services.users.UsersViewModel
 import com.example.sport_path.services.users.WifiChecker
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class ProfileFragment : Fragment(), EntryAdapter.OnDeleteButtonClickListener {
+class EntriesBottomSheetFragment : BottomSheetDialogFragment(), EntryAdapter.OnDeleteButtonClickListener {
 
-    private lateinit var binding: FragmentProfileBinding
+    private lateinit var binding: FragmentEntriesBinding
     private lateinit var viewModel: UsersViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentProfileBinding.inflate(layoutInflater)
-        val router = ServiceLocator.getService<Router>("Router")!!
-        binding.button3.setOnClickListener {
-            ServiceLocator.getService<FragmentFactory>("FragmentFactory")?.createFragment(
-                FragmentFactory.FRAGMENT_MAP
-            ).let {
-                router.replaceFragment(it!!, true)
-            }
-        }
+        binding = FragmentEntriesBinding.inflate(layoutInflater)
+//        val router = ServiceLocator.getService<Router>("Router")!!
+//        binding.button3.setOnClickListener {
+//            ServiceLocator.getService<FragmentFactory>("FragmentFactory")?.createFragment(
+//                FragmentFactory.FRAGMENT_MAP
+//            ).let {
+//                router.replaceFragment(it!!, true)
+//            }
+//        }
         viewModel = ServiceLocator.getService("UsersViewModel")!!
 
 
         viewModel.entriesList.observe(this) {
+            Log.d("mlog", "entriesListPinged")
+
             setUpRecyclerView(it)
         }
         if (WifiChecker.isInternetConnected(requireContext())) {
@@ -57,10 +57,10 @@ class ProfileFragment : Fragment(), EntryAdapter.OnDeleteButtonClickListener {
         return binding.root
     }
 
-    fun setUpRecyclerView(entryList: List<Entry>) {
-        Log.d("mlog", "pizda")
+    fun setUpRecyclerView(entryList: MutableList<Entry>) {
+        Log.d("mlog", "setUpENTRIES")
         val recyclerView = binding.rvEntryList
-        val adapter = EntryAdapter(entryList, this@ProfileFragment)
+        val adapter = EntryAdapter(entryList, this@EntriesBottomSheetFragment)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         recyclerView.adapter = adapter
@@ -69,13 +69,17 @@ class ProfileFragment : Fragment(), EntryAdapter.OnDeleteButtonClickListener {
         }
     }
 
-    override fun onDeleteButtonClick(entry: Entry, position: Int) {
+    override fun onDeleteButtonClick(entryList: MutableList<Entry>, position: Int,size: Int) {
         if (WifiChecker.isInternetConnected(requireContext())) {
-            viewModel.deleteEntry(entry.id, position)
-            if (position == 0) {
+
+
+            viewModel.deleteEntry(entryList[position].id, position)
+            entryList.removeAt(position)
+            if (size == 1) {
                 binding.stateTextView.isVisible = true
 
             }
+            setUpRecyclerView(entryList)
         } else {
             binding.stateTextView.isVisible = true
             Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()

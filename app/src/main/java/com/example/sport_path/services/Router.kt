@@ -22,5 +22,6 @@ class Router(private val containerId: Int, private val fragmentManager: Fragment
     }
     fun popFragment() {
         fragmentManager.popBackStack()
+
     }
 }

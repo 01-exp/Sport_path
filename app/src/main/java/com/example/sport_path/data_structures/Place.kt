@@ -1,9 +1,17 @@
 package com.example.sport_path.data_structures
 
 import com.yandex.mapkit.geometry.Point
+import com.google.gson.annotations.SerializedName
 
-class Place (
-    val id :Int,
-    val point : Point,
-    val address:String
+
+data class Place(
+    @SerializedName("address")
+    val address: String,
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("lat")
+    val lat: Double,
+    @SerializedName("lon")
+    val lon: Double
 )
+

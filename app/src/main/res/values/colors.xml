@@ -9,4 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="text_white">#fafafa</color>
     <color name="black21">#212121</color>
+    <color name="backGrFromYa">#222327</color>
+    <color name="backGr2FromYa">#1a1a1a</color>
+    <color name="whiteTextColorFromYa">#9f9f9f</color>
+    <color name="greyForHZ">#61646b</color>
 </resources>

@@ -1,11 +1,9 @@
 package com.example.sport_path
 
-import android.util.Log
 import com.example.sport_path.data_structures.Sport
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import java.lang.IndexOutOfBoundsException
-import java.text.SimpleDateFormat
 import java.util.Calendar
 
 object Utils {
@@ -134,4 +132,24 @@ object Utils {
     }
 
 
+    fun getTodayDate(): String {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        return "${day}.${month + 1}.${year}"
+    }
+
 }
+
+/**
+ * getPlacesOnSport(sport: Sport):List<Place>
+ * getPlaceOnline(fieldId:Int):Map<String,Int>
+ *
+ * setNewUser():String
+ * getUserEntries():MutableList<Entry>
+ * setEntry(placeId:Int, time:String)
+ * delete_entry(entryId:Int)
+ *
+ *
+ */

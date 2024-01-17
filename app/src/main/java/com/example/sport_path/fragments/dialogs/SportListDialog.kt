@@ -1,4 +1,4 @@
-package com.example.sport_path.dialogs
+package com.example.sport_path.fragments.dialogs
 
 import android.app.Dialog
 import android.content.Context
@@ -8,10 +8,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sport_path.R
-import com.example.sport_path.data_structures.Entry
-import com.example.sport_path.data_structures.Place
 import com.example.sport_path.services.maps.SportAdapter
-import com.yandex.mapkit.geometry.Point
 
 // Define a DialogList class that extends Dialog
 abstract class DialogList(

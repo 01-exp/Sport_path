@@ -1,4 +1,4 @@
-package com.example.sport_path.dialogs
+package com.example.sport_path.fragments.dialogs
 
 import android.app.Dialog
 import android.content.Context
@@ -42,6 +42,7 @@ abstract class TimePickerDialog(
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             // Apply the adapter to the spinner.
             hoursSpinner.adapter = adapter
+
         }
 
         ArrayAdapter.createFromResource(
