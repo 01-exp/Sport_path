@@ -95,7 +95,7 @@ class UsersViewModel() : ViewModel() {
 
     fun setEntry(placeId: Int, time: String) {
         viewModelScope.launch {
-            val response = retrofitService.setEntry(userIdMutable.value!!, placeId, time)
+            val response = retrofitService.setEntry(storage.getUserId(), placeId, time)
             response.enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
 

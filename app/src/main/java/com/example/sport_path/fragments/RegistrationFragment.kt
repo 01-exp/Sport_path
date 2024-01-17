@@ -57,11 +57,47 @@ class RegistrationFragment : Fragment() {
 
         }
         binding.registerButton.setOnClickListener{
+
+
+            if (binding.regPasswordEditText.text.toString().length >= 8 ){
+
             viewModel.regNewUser(
                 binding.nameEditText.text.toString(),
                 binding.regLoginEditText.text.toString(),
                 binding.regPasswordEditText.text.toString()
-            )
+            )} else if(binding.regPasswordEditText.text.toString().length > 40 ){
+                Toast.makeText(
+                    requireContext(),
+                    "Слишком много символов в поле пароля",
+                    Toast.LENGTH_LONG
+                ).show()
+            }else if(binding.regLoginEditText.text.toString().length > 40 ){
+                Toast.makeText(
+                    requireContext(),
+                    "Слишком много символов в поле Логина",
+                    Toast.LENGTH_LONG
+                ).show()
+            }else if(binding.nameEditText.text.toString().length > 40 ){
+                Toast.makeText(
+                    requireContext(),
+                    "Слишком много символов в имени Пользователя",
+                    Toast.LENGTH_LONG
+                ).show()
+            }else if(binding.regPasswordEditText.text.toString().length > 40 ){
+                Toast.makeText(
+                    requireContext(),
+                    "Слишком много символов в поле пароля",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            else{
+                Toast.makeText(
+                    requireContext(),
+                    "Пароль должен содержать не менее 8-ми символов",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
 

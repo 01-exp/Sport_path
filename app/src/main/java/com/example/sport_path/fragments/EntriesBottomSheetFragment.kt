@@ -10,17 +10,24 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sport_path.data_structures.Entry
 import com.example.sport_path.databinding.FragmentEntriesBinding
+import com.example.sport_path.fragments.dialogs.ConfirmFragmentDialog
+import com.example.sport_path.fragments.dialogs.ConfirmFragmentDialogForEntries
 import com.example.sport_path.services.ServiceLocator
 import com.example.sport_path.services.users.EntryAdapter
 import com.example.sport_path.services.users.UsersViewModel
 import com.example.sport_path.services.users.WifiChecker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlin.math.sign
 
 
-class EntriesBottomSheetFragment : BottomSheetDialogFragment(), EntryAdapter.OnDeleteButtonClickListener {
+class EntriesBottomSheetFragment : BottomSheetDialogFragment(),
+    EntryAdapter.OnDeleteButtonClickListener, ConfirmFragmentDialogForEntries.onClickListener {
 
     private lateinit var binding: FragmentEntriesBinding
     private lateinit var viewModel: UsersViewModel
+    lateinit var confirmDialog: ConfirmFragmentDialogForEntries
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentEntriesBinding.inflate(layoutInflater)
@@ -69,23 +76,33 @@ class EntriesBottomSheetFragment : BottomSheetDialogFragment(), EntryAdapter.OnD
         }
     }
 
-    override fun onDeleteButtonClick(entryList: MutableList<Entry>, position: Int,size: Int) {
+    override fun onDeleteButtonClick(entryList: MutableList<Entry>, position: Int, size: Int) {
         if (WifiChecker.isInternetConnected(requireContext())) {
 
+            confirmDialog =
+                object : ConfirmFragmentDialogForEntries(context, this, entryList, position, size) {
 
-            viewModel.deleteEntry(entryList[position].id, position)
-            entryList.removeAt(position)
-            if (size == 1) {
-                binding.stateTextView.isVisible = true
+                }
+            confirmDialog.show()
 
-            }
-            setUpRecyclerView(entryList)
+
         } else {
             binding.stateTextView.isVisible = true
             Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
 
         }
 
+    }
+
+
+    override fun onClick(entryList: MutableList<Entry>, position: Int, size: Int) {
+        viewModel.deleteEntry(entryList[position].id, position)
+        entryList.removeAt(position)
+        if (size == 1) {
+            binding.stateTextView.isVisible = true
+
+        }
+        setUpRecyclerView(entryList)
     }
 
 

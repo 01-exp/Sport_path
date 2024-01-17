@@ -15,26 +15,22 @@ import com.example.sport_path.services.users.UsersViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-
-class ProfileBottomSheetDialogFragment : BottomSheetDialogFragment() {
+class ProfileBottomSheetDialogFragment : BottomSheetDialogFragment(),ConfirmFragmentDialog.onClickListener {
 
     lateinit var binding: FragmentProfileBottomSheetDialogBinding
+    lateinit var storage: Storage
+    lateinit var confirmDialog: ConfirmFragmentDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentProfileBottomSheetDialogBinding.inflate(layoutInflater)
-        val storage = ServiceLocator.getService<Storage>("Storage")!!
+        storage = ServiceLocator.getService("Storage")!!
         binding.UserNameTextView.text = storage.getUserName()
         binding.outButton.setOnClickListener {
-           storage.clearUserData()
-            ServiceLocator.getService<FragmentFactory>("FragmentFactory")?.createFragment(
-                FragmentFactory.FRAGMENT_LOGIN
-            ).let {
-                openFragment(it!!)
+
+            confirmDialog = object : ConfirmFragmentDialog(context,this) {
+
             }
-            ServiceLocator.getService<UsersViewModel>("UsersViewModel").let {
-                it!!.userOut()
-            }
-            dismiss()
+            confirmDialog.show()
         }
 
     }
@@ -51,5 +47,23 @@ class ProfileBottomSheetDialogFragment : BottomSheetDialogFragment() {
         ServiceLocator.getService<Router>("Router")?.addFragment(fragment, false)
     }
 
+
+    fun out() {
+
+        storage.clearUserData()
+        ServiceLocator.getService<FragmentFactory>("FragmentFactory")?.createFragment(
+            FragmentFactory.FRAGMENT_LOGIN
+        ).let {
+            openFragment(it!!)
+        }
+        ServiceLocator.getService<UsersViewModel>("UsersViewModel").let {
+            it!!.userOut()
+        }
+        dismiss()
+    }
+
+    override fun onClick() {
+        out()
+    }
 
 }
