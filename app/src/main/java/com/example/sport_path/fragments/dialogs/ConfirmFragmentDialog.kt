@@ -12,7 +12,7 @@ import com.example.sport_path.R
 import com.example.sport_path.databinding.FragmentConfirmDialogBinding
 
 
-abstract class ConfirmFragmentDialog(context: Context?, val listener: onClickListener) :
+abstract class ConfirmFragmentDialog(context: Context?, private val listener: onClickListener) :
     Dialog(context!!) {
 
 

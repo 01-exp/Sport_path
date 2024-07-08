@@ -7,18 +7,6 @@ import java.lang.IndexOutOfBoundsException
 import java.util.Calendar
 
 object Utils {
-
-    //    fun getApiKey(): String {
-//        val properties = Properties()
-//        properties.load(
-//            FileInputStream(
-//                File("C:\\Users\\dekkv\\AndroidStudioProjects\\Sport_path\\local.properties")
-//
-//            )
-//        )
-//
-//        return properties.getProperty("apiKey")
-//    }
     val Sports = listOf(
         Sport("Баскетбол", "basketball", R.drawable.basketball),
         Sport("Футбол", "football", R.drawable.football),
@@ -34,44 +22,6 @@ object Utils {
         /* azimuth = */0.0f,
         /* tilt = */ 0.0f
     )
-
-    val timePoints = listOf(
-        "07:00",
-        "07:30",
-        "08:00",
-        "08:30",
-        "09:00",
-        "09:30",
-        "10:00",
-        "10:30",
-        "11:00",
-        "11:30",
-        "12:00",
-        "12:30",
-        "13:00",
-        "13:30",
-        "14:00",
-        "14:30",
-        "15:00",
-        "15:30",
-        "16:00",
-        "16:30",
-        "17:00",
-        "17:30",
-        "18:00",
-        "18:30",
-        "19:00",
-        "19:30",
-        "20:00",
-        "20:30",
-        "21:00",
-        "21:30",
-        "22:00",
-        "22:30",
-        "23:00",
-        "23:30"
-    )
-
     fun getIconBySport(sportName: String): Int {
         Sports.forEach {
             if (it.nameEn == sportName) {
@@ -96,13 +46,10 @@ object Utils {
                 }
             }
         }
-//        Log.d("mlog", "$address  $word $splitAddress")
-        try {
-//            Log.d("mlog", word + " ," + splitAddress[splitAddress.indexOf(word) + 1]+"123")
-            return word + " " + splitAddress[splitAddress.indexOf(word) + 1]
-
+        return try {
+            word + " " + splitAddress[splitAddress.indexOf(word) + 1]
         } catch (e: IndexOutOfBoundsException) {
-            return word
+            word
         }
     }
 
@@ -121,35 +68,19 @@ object Utils {
             10 -> "Октября"
             11 -> "Ноября"
             12 -> "Декабря"
-
-
             else -> "Декабря"
         }
-
-        // улица площаль переулок проспект
-
         return "${dateSplit[0]} $month"
     }
-
-
     fun getTodayDate(): String {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
+        if ((month+1).toString().length<2){
+            return "${day}.0${month + 1}.${year}"
+        }
         return "${day}.${month + 1}.${year}"
     }
-
 }
 
-/**
- * getPlacesOnSport(sport: Sport):List<Place>
- * getPlaceOnline(fieldId:Int):Map<String,Int>
- *
- * setNewUser():String
- * getUserEntries():MutableList<Entry>
- * setEntry(placeId:Int, time:String)
- * delete_entry(entryId:Int)
- *
- *
- */

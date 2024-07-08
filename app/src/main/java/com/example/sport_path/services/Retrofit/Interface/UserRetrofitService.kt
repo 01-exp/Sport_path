@@ -32,5 +32,4 @@ interface UserRetrofitService {
         @Path("email") email: String,
         @Path("password") password: String
     ): Call<UserInfo>
-
 }

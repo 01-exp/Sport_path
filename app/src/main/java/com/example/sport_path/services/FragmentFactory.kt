@@ -2,7 +2,7 @@ package com.example.sport_path.services
 
 import androidx.fragment.app.Fragment
 import com.example.sport_path.fragments.MapFragment
-import com.example.sport_path.fragments.EntriesBottomSheetFragment
+import com.example.sport_path.fragments.bottomSheets.EntriesBottomSheetFragment
 import com.example.sport_path.fragments.LoginFragment
 import com.example.sport_path.fragments.RegistrationFragment
 

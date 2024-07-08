@@ -20,27 +20,13 @@ abstract class DialogList(
     // This method is called when the Dialog is created
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState ?: Bundle())
-
-        // Use the LayoutInflater to inflate the
-        // dialog_list layout file into a View object
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_list, null)
-
-        // Set the dialog's content view
-        // to the newly created View object
         setContentView(view)
-
-        // Allow the dialog to be dismissed
-        // by touching outside of it
         setCanceledOnTouchOutside(true)
-
-        // Allow the dialog to be canceled
-        // by pressing the back button
         setCancelable(true)
-        // Set up the RecyclerView in the dialog
         setUpRecyclerView(view)
     }
 
-    // This method sets up the RecyclerView in the dialog
     private fun setUpRecyclerView(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvList)
         recyclerView.layoutManager = LinearLayoutManager(context)

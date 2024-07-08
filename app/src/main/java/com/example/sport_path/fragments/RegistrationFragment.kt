@@ -1,119 +1,104 @@
 package com.example.sport_path.fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.sport_path.R
+import androidx.lifecycle.ViewModelProvider
+import com.example.sport_path.application.appComponent
 import com.example.sport_path.databinding.FragmentRegistrationBinding
 import com.example.sport_path.services.FragmentFactory
 import com.example.sport_path.services.Router
-import com.example.sport_path.services.ServiceLocator
-import com.example.sport_path.services.Storage
 import com.example.sport_path.services.users.UsersViewModel
+import com.example.sport_path.services.users.UsersViewModelFactory
+import javax.inject.Inject
 
 
 class RegistrationFragment : Fragment() {
 
     private lateinit var binding: FragmentRegistrationBinding
+
+    @Inject
+    lateinit var routerFactory: Router.Factory
+    lateinit var router: Router
+
+    @Inject
+    lateinit var usersViewModelFactory: UsersViewModelFactory
     private lateinit var viewModel: UsersViewModel
+
+    override fun onAttach(context: Context) {
+        context.appComponent.inject(this)
+        router = routerFactory.create(parentFragmentManager)
+        viewModel = ViewModelProvider(this, usersViewModelFactory)[UsersViewModel::class.java]
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentRegistrationBinding.inflate(layoutInflater)
+
         binding.loginTextView.setOnClickListener {
-            ServiceLocator.getService<FragmentFactory>("FragmentFactory")?.createFragment(
-                FragmentFactory.FRAGMENT_LOGIN
-            ).let {
-                openFragment(it!!)
-            }
+            router.addFragmentWithBackStack(FragmentFactory.FRAGMENT_LOGIN)
         }
-        val storage = ServiceLocator.getService<Storage>("Storage")!!
-        viewModel = ServiceLocator.getService("UsersViewModel")!!
+
         viewModel.userId.observe(this) {
             when (it) {
-                -1 -> Toast.makeText(
-                    requireContext(),
-                    "Этот логин уже используется",
-                    Toast.LENGTH_LONG
-                ).show()
-                -2 -> Toast.makeText(
-                    requireContext(),
-                    "Пользователь с таким именем уже существует",
-                    Toast.LENGTH_LONG
-                ).show()
-                else->{
-                    storage.saveId(it.toString())
-                    storage.saveUserName(binding.nameEditText.text.toString())
-                    ServiceLocator.getService<FragmentFactory>("FragmentFactory")?.createFragment(
-                        FragmentFactory.FRAGMENT_MAP
-                    ).let { it2->
-                        openFragment(it2!!)
-                    }
+                -1 -> makeToast("Этот логин уже используется")
+
+                -2 -> makeToast("Пользователь с таким именем уже существует")
+
+                else -> {
+                    router.addFragmentWithoutBackStack(FragmentFactory.FRAGMENT_MAP)
                 }
             }
 
         }
-        binding.registerButton.setOnClickListener{
+        binding.registerButton.setOnClickListener {
+            checkingEnteredFields()
+        }
 
+    }
 
-            if (binding.regPasswordEditText.text.toString().length >= 8 ){
+    private fun checkingEnteredFields() {
+        val passwordLength = binding.regPasswordEditText.text.toString().length
+        val loginLength = binding.regLoginEditText.text.toString().length
+        val nameLength = binding.nameEditText.text.toString().length
 
+        if (passwordLength in 8 until 40) {
             viewModel.regNewUser(
                 binding.nameEditText.text.toString(),
                 binding.regLoginEditText.text.toString(),
                 binding.regPasswordEditText.text.toString()
-            )} else if(binding.regPasswordEditText.text.toString().length > 40 ){
-                Toast.makeText(
-                    requireContext(),
-                    "Слишком много символов в поле пароля",
-                    Toast.LENGTH_LONG
-                ).show()
-            }else if(binding.regLoginEditText.text.toString().length > 40 ){
-                Toast.makeText(
-                    requireContext(),
-                    "Слишком много символов в поле Логина",
-                    Toast.LENGTH_LONG
-                ).show()
-            }else if(binding.nameEditText.text.toString().length > 40 ){
-                Toast.makeText(
-                    requireContext(),
-                    "Слишком много символов в имени Пользователя",
-                    Toast.LENGTH_LONG
-                ).show()
-            }else if(binding.regPasswordEditText.text.toString().length > 40 ){
-                Toast.makeText(
-                    requireContext(),
-                    "Слишком много символов в поле пароля",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            )
+        } else if (passwordLength >= 40) {
+            makeToast("Слишком много символов в поле пароля")
 
-            else{
-                Toast.makeText(
-                    requireContext(),
-                    "Пароль должен содержать не менее 8-ми символов",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+        } else if (passwordLength < 8) {
+            makeToast("Пароль должен содержать не менее 8-ми символов")
+        } else if (loginLength >= 40) {
+            makeToast("Слишком много символов в поле Логина")
+
+        } else if (nameLength >= 40) {
+            makeToast("Слишком много символов в имени Пользователя")
+
         }
-
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         return binding.root
     }
 
-    fun openFragment(fragment: Fragment) {
-        ServiceLocator.getService<Router>("Router")?.addFragment(fragment, true)
+    private fun makeToast(text: String) {
+        Toast.makeText(
+            requireContext(),
+            text,
+            Toast.LENGTH_LONG
+        ).show()
     }
-
-
 }

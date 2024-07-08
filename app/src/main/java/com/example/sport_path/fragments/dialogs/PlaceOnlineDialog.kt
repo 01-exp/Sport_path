@@ -1,86 +1,103 @@
 package com.example.sport_path.fragments.dialogs
 
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sport_path.R
+import com.example.sport_path.Utils
+import com.example.sport_path.services.maps.PlaceOnlineAdapter
+import com.example.sport_path.services.maps.PlaceViewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
-// Define a DialogList class that extends Dialog
-abstract class PlaceOnlineDialog(
-    context: Context?, val placeOnlineMap:  Map<String, Int>
-) : Dialog(context!!) {
+abstract class PlaceOnlineDialog(private val viewModel:PlaceViewModel,context:Context?, private val placeId:Int, private val owner: LifecycleOwner) : Dialog(context!!) {
 
 
-//    private lateinit var countTextView: TextView
+    private lateinit var dateTextView: TextView
+    private lateinit var noPeopleTextView: TextView
+    private lateinit var date:String
 
-    // This method is called when the Dialog is created
+
+
+
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState ?: Bundle())
-
-        // Use the LayoutInflater to inflate the
-        // dialog_list layout file into a View object
         val view = LayoutInflater.from(context).inflate(R.layout.place_online_dialog, null)
-//        countTextView = findViewById(R.id.countTextView)
-        // Set the dialog's content view
-        // to the newly created View object
         setContentView(view)
-
-        // Allow the dialog to be dismissed
-        // by touching outside of it
         setCanceledOnTouchOutside(true)
-
-        // Allow the dialog to be canceled
-        // by pressing the back button
         setCancelable(true)
-        // Set up the RecyclerView in the dialog
-        val spinner = findViewById<Spinner>(R.id.time_spinner)
-        ArrayAdapter.createFromResource(
-            context,
-            R.array.hours_and_minuts_array,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner.
-            spinner.adapter = adapter
+
+
+
+
+        dateTextView = view.findViewById(R.id.dateTextView)
+        noPeopleTextView = view.findViewById(R.id.noPeopleTextView)
+
+
+        date = Utils.getTodayDate()
+
+        dateTextView.text = Utils.formattedDate(date)
+        dateTextView.setOnClickListener {
+            showDatePickerDialog(Calendar.getInstance())
         }
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            val countTextView = findViewById<TextView>(R.id.countTextView)
+        viewModel.placeOnlineList.observe(owner){
+            setUpRecyclerView(view,it)
+            noPeopleTextView.isVisible = !it.isNotEmpty()
 
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                countTextView.text = getOnline(parent?.getItemAtPosition(position).toString())
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                countTextView.text = getOnline(parent?.getItemAtPosition(0).toString())
-
-            }
         }
+        viewModel.getPlaceOnline(placeId,date)
+
+
     }
 
-    // This method sets up the RecyclerView in the dialog
-    private fun getOnline(key:String):String {
-        val count = placeOnlineMap[key]!!
-        val postfix = if ((count == 0) or ((count%2)!=0) ){
-            "человек"
-        }else{
-            "человека"
+    private fun setUpRecyclerView(view: View,placeOnlineMap:  Map<String, Int>){
+        val recyclerView =view.findViewById<RecyclerView>(R.id.OnLineRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = PlaceOnlineAdapter(placeOnlineMap.toList())
+
+    }
+    @SuppressLint("SimpleDateFormat")
+    fun showDatePickerDialog(calendar: Calendar) {
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val minDateUnix = SimpleDateFormat("dd.MM.yyyy").parse("${day}.${month + 1}.${year}")
+        val maxDateUnix = SimpleDateFormat("dd.MM.yyyy").parse("${day + 30}.${month + 1}.${year}")
+
+        DatePickerDialog(
+            context,
+            { _, myYear, myMonth, myDay ->
+
+                date = if ((myMonth + 1).toString().length < 2) {
+                    "${myDay}.0${myMonth + 1}.${myYear}"
+                } else {
+                    "${myDay}.${myMonth + 1}.${myYear}"
+                }
+                viewModel.getPlaceOnline(placeId, date)
+               dateTextView.text = Utils.formattedDate(date)
+
+            }, year, month, day
+        ).apply {
+            if (minDateUnix != null && maxDateUnix != null) {
+                datePicker.minDate = minDateUnix.time
+                datePicker.maxDate = maxDateUnix.time
+                show()
+            }
         }
-
-        return "Прийдёт ${placeOnlineMap[key]} $postfix"
-
     }
 }

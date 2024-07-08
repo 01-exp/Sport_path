@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    tools:context=".fragments.dialogs.ProfileBottomSheetDialogFragment">
+    tools:context=".fragments.bottomSheets.ProfileBottomSheetDialogFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
