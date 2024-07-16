@@ -10,7 +10,7 @@ import com.example.sport_path.services.dagger.DaggerAppComponent
 import com.yandex.mapkit.MapKitFactory
 
 
-class MainApplication:Application() {
+class MainApplication:Application(){
     lateinit var appComponent: AppComponent
     override fun onCreate() {
         super.onCreate()
@@ -26,6 +26,7 @@ class MainApplication:Application() {
     private inner class AppDepsImpl:AppDeps{
         override val context: Context = this@MainApplication
     }
+
 }
 
 val Context.appComponent : AppComponent
