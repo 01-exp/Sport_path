@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.sport_path.R
 import com.example.sport_path.application.appComponent
 import com.example.sport_path.databinding.FragmentRegistrationBinding
 import com.example.sport_path.services.FragmentFactory
@@ -41,7 +43,9 @@ class RegistrationFragment : Fragment() {
         binding = FragmentRegistrationBinding.inflate(layoutInflater)
 
         binding.loginTextView.setOnClickListener {
-            router.addFragmentWithBackStack(FragmentFactory.FRAGMENT_LOGIN)
+            findNavController().navigate(R.id.action_Auth_to_Login)
+
+           // router.addFragmentWithBackStack(FragmentFactory.FRAGMENT_LOGIN)
         }
 
         viewModel.userId.observe(this) {
@@ -51,7 +55,9 @@ class RegistrationFragment : Fragment() {
                 -2 -> makeToast("Пользователь с таким именем уже существует")
 
                 else -> {
-                    router.addFragmentWithoutBackStack(FragmentFactory.FRAGMENT_MAP)
+                    findNavController().navigate(R.id.action_Auth_to_Maps)
+
+                  //  router.addFragmentWithoutBackStack(FragmentFactory.FRAGMENT_MAP)
                 }
             }
 

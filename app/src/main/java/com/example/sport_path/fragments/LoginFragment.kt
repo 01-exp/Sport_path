@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.sport_path.R
 import com.example.sport_path.databinding.FragmentLoginBinding
 import com.example.sport_path.services.FragmentFactory
 import com.example.sport_path.services.Router
@@ -45,7 +47,9 @@ class LoginFragment : Fragment() {
             if (it.loginStatusCode != -5) {
                 when (it.loginStatusCode) {
                     0 -> {
-                        router.addFragmentWithoutBackStack(FragmentFactory.FRAGMENT_MAP)
+                      //  router.addFragmentWithoutBackStack(FragmentFactory.FRAGMENT_MAP)
+                     //   findNavController().navigate(R.id.action_Login_to_Maps)
+
                     }
 
                     else -> Toast.makeText(
@@ -59,7 +63,9 @@ class LoginFragment : Fragment() {
 
 
         binding.registerTextView.setOnClickListener {
-            router.addFragmentWithBackStack(FragmentFactory.FRAGMENT_REGISTRATION)
+          //  router.addFragmentWithBackStack(FragmentFactory.FRAGMENT_REGISTRATION)
+          //  findNavController().navigate(R.id.action_Login_to_Auth)
+
         }
         binding.loginButton.setOnClickListener {
             binding.loginButton.isClickable = false
@@ -67,6 +73,7 @@ class LoginFragment : Fragment() {
                 binding.loginEditText.text.toString(),
                 binding.passwordEditText.text.toString()
             )
+
         }
     }
 

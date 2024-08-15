@@ -14,3 +14,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Sport_path"
 include ':app'
+include ':core'
+include ':feature:maps'
+include ':feature:splash'
+include ':feature:login'

@@ -1,7 +1,10 @@
 package com.example.sport_path.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.example.sport_path.R
 import com.example.sport_path.application.appComponent
 import com.example.sport_path.services.FragmentFactory
@@ -27,14 +30,19 @@ class MainActivity : AppCompatActivity() {
 
         appComponent.inject(this)
 
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
         router = routerFactory.create(supportFragmentManager)
         viewModel = ViewModelProvider(this,usersViewModelFactory)[UsersViewModel::class.java]
 
-        if (viewModel.isUserLogged()) {
-            router.addFragmentWithoutBackStack(FragmentFactory.FRAGMENT_MAP)
-        } else {
-            router.addFragmentWithoutBackStack(FragmentFactory.FRAGMENT_LOGIN)
-        }
+//        if (viewModel.isUserLogged()) {
+//            router.addFragmentWithoutBackStack(FragmentFactory.FRAGMENT_MAP)
+//        } else {
+//            router.addFragmentWithoutBackStack(FragmentFactory.FRAGMENT_LOGIN)
+//        }
+
     }
 
 

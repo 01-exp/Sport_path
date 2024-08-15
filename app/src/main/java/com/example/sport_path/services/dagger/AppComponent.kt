@@ -1,6 +1,9 @@
 package com.example.sport_path.services.dagger
 
 import android.content.Context
+import com.example.core.AppDeps
+import com.example.splash.presentation.SplashFragment
+import com.example.splash.presentation.di.SplashModule
 import com.example.sport_path.activities.MainActivity
 import com.example.sport_path.fragments.LoginFragment
 import com.example.sport_path.fragments.MapFragment
@@ -16,7 +19,7 @@ import com.example.sport_path.services.maps.PlaceRepositoryImpl
 import com.example.sport_path.services.maps.PlaceViewModelFactory
 import com.example.sport_path.services.FragmentFactory
 import com.example.sport_path.services.Retrofit.Interface.UserRetrofitService
-import com.example.sport_path.services.Retrofit.RetrofitClient
+import com.example.sport_path.services.Retrofit.RetrofitServiceProvider
 import com.example.sport_path.services.users.UserRepository
 import com.example.sport_path.services.users.UserRepositoryImpl
 import com.example.sport_path.services.users.UsersViewModelFactory
@@ -26,12 +29,10 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-interface AppDeps {
-    val context: Context
-}
+
 
 @Singleton
-@Component(modules = [AppModule::class], dependencies = [AppDeps::class])
+@Component(modules = [AppModule::class, SplashModule::class], dependencies = [AppDeps::class])
 interface AppComponent {
     fun inject(mainActivity: MainActivity)
     fun inject(loginFragment: LoginFragment)
@@ -40,6 +41,8 @@ interface AppComponent {
     fun inject(entriesBottomSheetFragment: EntriesBottomSheetFragment)
     fun inject(modalBottomSheetFragment: ModalBottomSheetFragment)
     fun inject(profileBottomSheetDialogFragment: ProfileBottomSheetDialogFragment)
+
+    fun inject(splashFragment: SplashFragment)
 
     @Component.Builder
     interface Builder {
@@ -68,7 +71,7 @@ class AppModule {
 
     @Provides
     fun providePlaceRetrofitService(): PlaceRetrofitService =
-        RetrofitClient.getClient().create(PlaceRetrofitService::class.java)
+        RetrofitServiceProvider.placeRetrofitService
 
     @Provides
     fun provideFragmentFactory(): FragmentFactory = FragmentFactory()
@@ -89,5 +92,5 @@ class AppModule {
 
     @Provides
     fun provideUserRetrofitService(): UserRetrofitService =
-        RetrofitClient.getClient().create(UserRetrofitService::class.java)
+        RetrofitServiceProvider.userRetrofitService
 }

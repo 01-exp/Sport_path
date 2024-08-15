@@ -10,7 +10,7 @@ import dagger.assisted.AssistedInject
 class Router @AssistedInject constructor(
     @Assisted("FragmentManager") val fragmentManager: FragmentManager,
     private val fragmentFactory: FragmentFactory) {
-    private val containerId: Int = R.id.place_holder
+    private val containerId: Int = R.id.nav_host_fragment
 
     fun addFragmentWithBackStack(fragmentType:Int) {
         val fragment = fragmentFactory.createFragment(fragmentType)

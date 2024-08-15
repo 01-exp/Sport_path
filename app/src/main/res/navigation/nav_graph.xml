@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/Splash">
+
+    <fragment
+        android:id="@+id/Map"
+        android:name="com.example.sport_path.fragments.MapFragment"
+        android:label="Map">
+        <deepLink
+            android:id="@+id/openMap"
+            app:uri="http::/example.com/map"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/Auth"
+        android:name="com.example.sport_path.fragments.RegistrationFragment"
+        android:label="Auth">
+        <action
+            android:id="@+id/action_Auth_to_Maps"
+            app:destination="@id/Map" />
+        <action
+            android:id="@+id/action_Auth_to_Login"
+            app:destination="@id/Login" />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/Login"
+        android:name="com.example.login.presentation.LoginFragment"
+        android:label="Login">
+        <action
+            android:id="@id/action_Login_to_Maps"
+            app:destination="@id/Map" />
+        <action
+            android:id="@id/action_Login_to_Auth"
+            app:destination="@id/Auth" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/Splash"
+        android:name="com.example.splash.presentation.SplashFragment"
+        android:label="Splash">
+        <action
+            android:id="@id/action_Splash_to_Maps"
+            app:destination="@id/Map" />
+        <action
+            android:id="@id/action_Splash_to_Login"
+            app:destination="@id/Login" />
+
+    </fragment>
+
+
+</navigation>
