@@ -2,6 +2,9 @@ package com.example.sport_path.application
 
 import android.app.Application
 import android.content.Context
+import com.example.auth.presentation.di.AuthComponent
+import com.example.auth.presentation.di.DaggerAuthComponent
+import com.example.auth.presentation.di.provider.AuthComponentProvider
 import com.example.core.AppDeps
 import com.example.login.presentation.di.DaggerLoginComponent
 import com.example.login.presentation.di.LoginComponent
@@ -16,7 +19,8 @@ import com.example.sport_path.services.dagger.DaggerAppComponent
 import com.yandex.mapkit.MapKitFactory
 
 
-class MainApplication:Application(),SplashComponentProvider, LoginComponentProvider {
+class MainApplication:Application(),SplashComponentProvider, LoginComponentProvider,
+    AuthComponentProvider {
     lateinit var appComponent: AppComponent
     override fun onCreate() {
         super.onCreate()
@@ -39,6 +43,9 @@ class MainApplication:Application(),SplashComponentProvider, LoginComponentProvi
 
     override fun getLoginComponent(): LoginComponent =
         DaggerLoginComponent.builder().appDeps(AppDepsImpl()).build()
+
+    override fun getAuthComponent(): AuthComponent =
+        DaggerAuthComponent.builder().appDeps(AppDepsImpl()).build()
 
 
 }

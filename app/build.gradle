@@ -88,6 +88,8 @@ android {
         implementation project(path: ':core')
         implementation project(path: ':feature:splash')
         implementation project(path: ':feature:login')
+        implementation project(path: ':feature:auth')
+
 
 
     }

@@ -1,7 +1,7 @@
-package com.example.login.presentation.di
+package com.example.auth.presentation.di
 
+import com.example.auth.presentation.AuthFragment
 import com.example.core.AppDeps
-import com.example.login.presentation.LoginFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -9,18 +9,18 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
-        LoginModule::class
+        AuthModule::class
     ],
     dependencies = [AppDeps::class]
 )
-interface LoginComponent {
+interface AuthComponent {
 
-    fun inject(loginFragment: LoginFragment)
+    fun inject(authFragment: AuthFragment)
 
     @Component.Builder
     interface Builder {
         fun appDeps(appDeps: AppDeps): Builder
-        fun build(): LoginComponent
+        fun build(): AuthComponent
     }
 
 }

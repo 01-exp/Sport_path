@@ -26,7 +26,7 @@ class LoginModule {
         ): LoginRepository = LoginRepositoryImpl(retrofitService,storage)
 
     @Provides
-    fun provideUserRetrofitService(): LoginRetrofitService =
+    fun provideLoginRetrofitService(): LoginRetrofitService =
         RetrofitServiceProvider.loginRetrofitService
 
 }
