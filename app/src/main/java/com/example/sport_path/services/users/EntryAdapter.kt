@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sport_path.R
 import com.example.sport_path.Utils
-import com.example.sport_path.data_structures.Entry
+import com.example.maps.data.data_structures.Entry
 
 class EntryAdapter(val entryList: MutableList<Entry>, val listener: OnDeleteButtonClickListener) :
     RecyclerView.Adapter<EntryAdapter.EntryHolder>() {

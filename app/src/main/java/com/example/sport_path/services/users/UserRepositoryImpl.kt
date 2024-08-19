@@ -2,10 +2,10 @@ package com.example.sport_path.services.users
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.sport_path.data_structures.Entry
-import com.example.sport_path.data_structures.UserInfo
-import com.example.sport_path.services.Storage
+import com.example.maps.data.data_structures.Entry
+import com.example.maps.data.data_structures.UserInfo
 import com.example.sport_path.services.Retrofit.Interface.UserRetrofitService
+import com.example.sport_path.services.Storage
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

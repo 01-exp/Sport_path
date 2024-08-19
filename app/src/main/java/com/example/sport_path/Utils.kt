@@ -1,6 +1,6 @@
 package com.example.sport_path
 
-import com.example.sport_path.data_structures.Sport
+import com.example.maps.data.data_structures.Sport
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import java.lang.IndexOutOfBoundsException

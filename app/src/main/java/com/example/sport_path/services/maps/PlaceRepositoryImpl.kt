@@ -2,8 +2,8 @@ package com.example.sport_path.services.maps
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.sport_path.data_structures.Place
-import com.example.sport_path.data_structures.Sport
+import com.example.maps.data.data_structures.Place
+import com.example.maps.data.data_structures.Sport
 import com.example.sport_path.services.Retrofit.Interface.PlaceRetrofitService
 import com.example.sport_path.services.Storage
 import retrofit2.Call

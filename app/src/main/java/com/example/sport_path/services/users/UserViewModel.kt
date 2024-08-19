@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.sport_path.data_structures.Entry
-import com.example.sport_path.data_structures.UserInfo
+import com.example.maps.data.data_structures.Entry
+import com.example.maps.data.data_structures.UserInfo
 import kotlinx.coroutines.launch
 
 class UsersViewModel(private val repository: UserRepository) : ViewModel() {

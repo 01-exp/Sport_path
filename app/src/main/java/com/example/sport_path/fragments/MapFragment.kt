@@ -9,13 +9,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.sport_path.fragments.dialogs.DialogList
-import com.example.sport_path.data_structures.Place
+import com.example.maps.data.data_structures.Place
 import com.example.sport_path.R
 import com.example.sport_path.services.maps.SportAdapter
 import com.example.sport_path.Utils
 import com.example.sport_path.application.appComponent
-import com.example.sport_path.data_structures.Entry
-import com.example.sport_path.data_structures.Sport
+import com.example.maps.data.data_structures.Entry
+import com.example.maps.data.data_structures.Sport
 import com.example.sport_path.databinding.FragmentMapBinding
 import com.example.sport_path.fragments.bottomSheets.EntriesBottomSheetFragment
 import com.example.sport_path.fragments.bottomSheets.ModalBottomSheetFragment

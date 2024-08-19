@@ -1,8 +1,8 @@
-package com.example.sport_path.services.Retrofit
-
+package com.example.sport_path. services.Retrofit
 
 import com.example.sport_path.services.Retrofit.Interface.PlaceRetrofitService
 import com.example.sport_path.services.Retrofit.Interface.UserRetrofitService
+
 
 object RetrofitServiceProvider {
     val placeRetrofitService: PlaceRetrofitService by lazy {

@@ -3,7 +3,7 @@ package com.example.sport_path.services
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.sport_path.Utils
-import com.example.sport_path.data_structures.Sport
+import com.example.maps.data.data_structures.Sport
 
 
 interface Storage{
@@ -16,7 +16,7 @@ interface Storage{
 
     fun saveCurrentSport(sportName: String)
 
-    fun getCurrentSport():Sport
+    fun getCurrentSport(): Sport
 
     fun getUserName():String
 

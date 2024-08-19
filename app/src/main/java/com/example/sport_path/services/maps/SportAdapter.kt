@@ -9,10 +9,10 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sport_path.R
-import com.example.sport_path.data_structures.Sport
+import com.example.maps.data.data_structures.Sport
 
 class SportAdapter(private val sportList: List<Sport>,
-    private val listener : OnItemCLickListener
+                   private val listener : OnItemCLickListener
 ) :
     RecyclerView.Adapter<SportAdapter.SportHolder>() {
     inner class SportHolder(item: View) : RecyclerView.ViewHolder(item),View.OnClickListener {
@@ -48,6 +48,6 @@ class SportAdapter(private val sportList: List<Sport>,
         return sportList.size
     }
     interface OnItemCLickListener{
-        fun onItemCLick(sport:Sport)
+        fun onItemCLick(sport: Sport)
     }
 }

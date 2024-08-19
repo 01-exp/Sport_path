@@ -7,8 +7,11 @@ import com.example.auth.presentation.di.DaggerAuthComponent
 import com.example.auth.presentation.di.provider.AuthComponentProvider
 import com.example.core.AppDeps
 import com.example.login.presentation.di.DaggerLoginComponent
+import com.example.login.presentation.di.DaggerMapsComponent
 import com.example.login.presentation.di.LoginComponent
+import com.example.login.presentation.di.MapsComponent
 import com.example.login.presentation.di.provider.LoginComponentProvider
+import com.example.maps.presentation.di.provider.MapsComponentProvider
 import com.example.splash.presentation.di.DaggerSplashComponent
 import com.example.splash.presentation.di.SplashComponent
 import com.example.splash.presentation.di.provider.SplashComponentProvider
@@ -20,7 +23,7 @@ import com.yandex.mapkit.MapKitFactory
 
 
 class MainApplication:Application(),SplashComponentProvider, LoginComponentProvider,
-    AuthComponentProvider {
+    AuthComponentProvider, MapsComponentProvider {
     lateinit var appComponent: AppComponent
     override fun onCreate() {
         super.onCreate()
@@ -47,6 +50,8 @@ class MainApplication:Application(),SplashComponentProvider, LoginComponentProvi
     override fun getAuthComponent(): AuthComponent =
         DaggerAuthComponent.builder().appDeps(AppDepsImpl()).build()
 
+    override fun getMapsComponent(): MapsComponent =
+        DaggerMapsComponent.builder().appDeps(AppDepsImpl()).build()
 
 }
 

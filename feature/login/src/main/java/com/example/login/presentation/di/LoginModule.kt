@@ -16,11 +16,11 @@ class LoginModule {
     fun provideLoginStorage(context: Context): LoginStorage = LoginStorageImpl(context)
 
     @Provides
-    fun provideSplashViewModelFactory(
+    fun provideLoginViewModelFactory(
         repository: LoginRepository,
     ): LoginViewModelFactory = LoginViewModelFactory(repository)
     @Provides
-    fun provideSplashRepository(
+    fun provideLoginRepository(
         retrofitService: LoginRetrofitService
         ,storage: LoginStorage
         ): LoginRepository = LoginRepositoryImpl(retrofitService,storage)

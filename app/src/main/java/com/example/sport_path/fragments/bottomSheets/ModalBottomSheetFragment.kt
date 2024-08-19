@@ -11,8 +11,8 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.sport_path.Utils
 import com.example.sport_path.application.appComponent
-import com.example.sport_path.data_structures.Entry
-import com.example.sport_path.data_structures.Place
+import com.example.maps.data.data_structures.Entry
+import com.example.maps.data.data_structures.Place
 import com.example.sport_path.databinding.FragmentModalBottomSheetBinding
 import com.example.sport_path.fragments.dialogs.PlaceOnlineDialog
 import com.example.sport_path.fragments.dialogs.TimePickerDialog

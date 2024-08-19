@@ -2,7 +2,7 @@ package com.example.sport_path.services.Retrofit.Interface
 
 import retrofit2.Call
 import retrofit2.http.*
-import com.example.sport_path.data_structures.Place
+import com.example.maps.data.data_structures.Place
 
 interface PlaceRetrofitService {
     @GET("getfieldbysport/{sportname}")

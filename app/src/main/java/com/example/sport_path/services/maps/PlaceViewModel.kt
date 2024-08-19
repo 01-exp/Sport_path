@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.sport_path.data_structures.Place
-import com.example.sport_path.data_structures.Sport
+import com.example.maps.data.data_structures.Place
+import com.example.maps.data.data_structures.Sport
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

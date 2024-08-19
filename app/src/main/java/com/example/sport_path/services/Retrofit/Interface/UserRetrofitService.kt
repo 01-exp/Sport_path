@@ -1,7 +1,7 @@
 package com.example.sport_path.services.Retrofit.Interface
 
-import com.example.sport_path.data_structures.Entry
-import com.example.sport_path.data_structures.UserInfo
+import com.example.maps.data.data_structures.Entry
+import com.example.maps.data.data_structures.UserInfo
 import retrofit2.Call
 import retrofit2.http.*
 

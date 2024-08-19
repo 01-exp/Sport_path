@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/Map"
-        android:name="com.example.sport_path.fragments.MapFragment"
+        android:name="com.example.maps.presentation.MapsFragment"
         android:label="Map">
         <deepLink
             android:id="@+id/openMap"
@@ -15,7 +15,7 @@
 
     <fragment
         android:id="@+id/Auth"
-        android:name="com.example.sport_path.fragments.RegistrationFragment"
+        android:name="com.example.auth.presentation.AuthFragment"
         android:label="Auth">
         <action
             android:id="@+id/action_Auth_to_Maps"

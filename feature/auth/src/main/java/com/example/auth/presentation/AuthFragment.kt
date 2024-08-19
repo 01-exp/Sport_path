@@ -2,6 +2,7 @@ package com.example.auth.presentation
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +40,7 @@ class AuthFragment : Fragment() {
 
         viewModel.userId.observe(this) {
             when (it) {
+                Log.d("mLogERR pp",it.toString())
                 -1 -> makeToast("Этот логин уже используется")
                 -2 -> makeToast("Пользователь с таким именем уже существует")
                 else -> {

@@ -10,7 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sport_path.application.appComponent
-import com.example.sport_path.data_structures.Entry
+import com.example.maps.data.data_structures.Entry
 import com.example.sport_path.databinding.FragmentEntriesBinding
 import com.example.sport_path.fragments.dialogs.ConfirmFragmentDialogForEntries
 import com.example.sport_path.services.users.EntryAdapter

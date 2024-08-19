@@ -4,15 +4,10 @@ package com.example.sport_path.fragments.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import com.example.sport_path.R
-import com.example.sport_path.data_structures.Entry
-import com.example.sport_path.databinding.FragmentConfirmDialogBinding
-import com.yandex.mapkit.map.CameraPosition
+import com.example.maps.data.data_structures.Entry
 
 
 abstract class ConfirmFragmentDialogForEntries(
