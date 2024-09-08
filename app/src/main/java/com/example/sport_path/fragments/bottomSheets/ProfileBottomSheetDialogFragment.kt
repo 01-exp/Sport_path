@@ -45,9 +45,7 @@ class ProfileBottomSheetDialogFragment : BottomSheetDialogFragment(),
         binding = FragmentProfileBottomSheetDialogBinding.inflate(layoutInflater)
         binding.UserNameTextView.text = viewModel.getUserName()
         binding.outButton.setOnClickListener {
-
             confirmDialog = object : ConfirmFragmentDialog(context,this) {
-
             }
             confirmDialog.show()
         }

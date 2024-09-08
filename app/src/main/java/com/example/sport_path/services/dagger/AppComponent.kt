@@ -2,6 +2,7 @@ package com.example.sport_path.services.dagger
 
 import android.content.Context
 import com.example.core.AppDeps
+import com.example.maps.presentation.di.MapsModule
 import com.example.sport_path.activities.MainActivity
 import com.example.sport_path.fragments.LoginFragment
 import com.example.sport_path.fragments.MapFragment

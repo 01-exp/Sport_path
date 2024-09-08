@@ -8,9 +8,12 @@
         android:id="@+id/Map"
         android:name="com.example.maps.presentation.MapsFragment"
         android:label="Map">
-        <deepLink
-            android:id="@+id/openMap"
-            app:uri="http::/example.com/map"/>
+        <action
+            android:id="@id/action_Maps_to_Profile"
+            app:destination="@id/Profile" />
+        <action
+            android:id="@id/action_Maps_to_Auth"
+            app:destination="@id/Auth" />
     </fragment>
 
     <fragment
@@ -18,10 +21,10 @@
         android:name="com.example.auth.presentation.AuthFragment"
         android:label="Auth">
         <action
-            android:id="@+id/action_Auth_to_Maps"
+            android:id="@id/action_Auth_to_Maps"
             app:destination="@id/Map" />
         <action
-            android:id="@+id/action_Auth_to_Login"
+            android:id="@id/action_Auth_to_Login"
             app:destination="@id/Login" />
 
     </fragment>
@@ -52,6 +55,29 @@
             app:destination="@id/Login" />
 
     </fragment>
+
+
+
+
+    <dialog
+        android:id="@+id/Profile"
+        android:name="com.example.profile.presentation.ProfileBottomSheetDialogFragment"
+        android:label="Profile">
+        <action
+            android:id="@id/action_Profile_to_Confirm"
+            app:destination="@id/Confirm"/>
+
+    </dialog>
+
+    <dialog
+        android:id="@+id/Confirm"
+        android:name="com.example.profile.presentation.ConfirmDialogFragment"
+        android:label="Confirm">
+        <action
+            android:id="@id/action_Confirm_to_Login"
+            app:destination="@id/Login"/>
+    </dialog>
+
 
 
 </navigation>

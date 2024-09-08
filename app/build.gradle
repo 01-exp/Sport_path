@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.sport_path"
-        minSdk 21
+        minSdk 23
         multiDexEnabled true
         targetSdk 34
         versionCode 1
@@ -90,6 +90,7 @@ android {
         implementation project(path: ':feature:login')
         implementation project(path: ':feature:auth')
         implementation project(path: ':feature:maps')
+        implementation project(path: ':feature:profile')
 
 
 

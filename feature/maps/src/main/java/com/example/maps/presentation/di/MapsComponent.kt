@@ -1,8 +1,7 @@
-package com.example.login.presentation.di
+package com.example.maps.presentation.di
 
 import com.example.core.AppDeps
 import com.example.maps.presentation.MapsFragment
-import com.example.maps.presentation.di.MapsModule
 import dagger.Component
 import javax.inject.Singleton
 
@@ -17,6 +16,8 @@ import javax.inject.Singleton
 interface MapsComponent {
 
     fun inject(mapsFragment: MapsFragment)
+
+
 
     @Component.Builder
     interface Builder {

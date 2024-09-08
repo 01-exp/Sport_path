@@ -43,7 +43,7 @@ class RegistrationFragment : Fragment() {
         binding = FragmentRegistrationBinding.inflate(layoutInflater)
 
         binding.loginTextView.setOnClickListener {
-            findNavController().navigate(R.id.action_Auth_to_Login)
+           // findNavController().navigate(R.id.action_Auth_to_Login)
 
            // router.addFragmentWithBackStack(FragmentFactory.FRAGMENT_LOGIN)
         }
@@ -55,7 +55,7 @@ class RegistrationFragment : Fragment() {
                 -2 -> makeToast("Пользователь с таким именем уже существует")
 
                 else -> {
-                    findNavController().navigate(R.id.action_Auth_to_Maps)
+                   // findNavController().navigate(R.id.action_Auth_to_Maps)
 
                   //  router.addFragmentWithoutBackStack(FragmentFactory.FRAGMENT_MAP)
                 }

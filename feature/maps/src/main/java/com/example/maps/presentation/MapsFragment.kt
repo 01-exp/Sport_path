@@ -1,6 +1,5 @@
 package com.example.maps.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.maps.R
 import com.example.maps.data.Utils
 import com.example.maps.presentation.di.provider.MapsComponentProvider
@@ -26,7 +26,7 @@ import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
 import javax.inject.Inject
 
-class MapsFragment : Fragment(), SportAdapter.OnItemCLickListener{
+class MapsFragment : Fragment(), SportAdapter.OnItemCLickListener {
     private lateinit var binding: FragmentMapsBinding
     private lateinit var mapView: MapView
     private lateinit var dialogList: DialogList
@@ -64,9 +64,9 @@ class MapsFragment : Fragment(), SportAdapter.OnItemCLickListener{
 //            entriesList = it
 //        }
 //
-            if (WifiChecker.isInternetConnected(requireContext())) {
+        if (WifiChecker.isInternetConnected(requireContext())) {
             mapsViewModel.getPlaces()
-         //   usersViewModel.getUserEntries()
+            //   usersViewModel.getUserEntries()
             setUpSportCard()
         } else {
             Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
@@ -83,15 +83,9 @@ class MapsFragment : Fragment(), SportAdapter.OnItemCLickListener{
 //        }
     }
 
-    private fun showProfileDialog() {
-//        val profileBottomSheetDialogFragment = ProfileBottomSheetDialogFragment()
-//        parentFragmentManager.let {
-//            profileBottomSheetDialogFragment.show(
-//                it,
-//                profileBottomSheetDialogFragment.tag
-//            )
-//        }
-    }
+    private fun showProfileDialog() =
+        findNavController().navigate(R.id.action_Maps_to_Profile)
+
 
     private fun showSportsDialog() {
         dialogList = object : DialogList(
@@ -111,7 +105,7 @@ class MapsFragment : Fragment(), SportAdapter.OnItemCLickListener{
             mapView.mapWindow.map.mapObjects.addPlacemark().apply {
                 geometry = Point(place.lat, place.lon)
                 setIcon(imageProvider)
-              //  addTapListener(tapListener)
+                //  addTapListener(tapListener)
             }
         }
     }
@@ -170,7 +164,7 @@ class MapsFragment : Fragment(), SportAdapter.OnItemCLickListener{
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-     //   setPositionOnMap(Utils.startPosition, Animation(Animation.Type.SMOOTH, 1f))
+        setPositionOnMap(Utils.startPosition, Animation(Animation.Type.SMOOTH, 1f))
         return binding.root
     }
 
