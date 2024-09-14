@@ -1,6 +1,7 @@
 package com.example.maps.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.core.WifiChecker
 import com.example.maps.R
 import com.example.maps.data.Utils
 import com.example.maps.presentation.di.provider.MapsComponentProvider
@@ -60,6 +62,7 @@ class MapsFragment : Fragment(), SportAdapter.OnItemCLickListener {
         mapsViewModel.placeList.observe(this) {
             setPointsOnMap(it)
         }
+
 //        usersViewModel.entriesList.observe(this) {
 //            entriesList = it
 //        }
@@ -74,13 +77,7 @@ class MapsFragment : Fragment(), SportAdapter.OnItemCLickListener {
     }
 
     private fun showEntriesBottomSheet() {
-//        val fragment = EntriesBottomSheetFragment()
-//        parentFragmentManager.let {
-//            fragment.show(
-//                it,
-//                fragment.tag
-//            )
-//        }
+       findNavController().navigate(R.id.action_Maps_to_Entries)
     }
 
     private fun showProfileDialog() =
@@ -100,42 +97,40 @@ class MapsFragment : Fragment(), SportAdapter.OnItemCLickListener {
         mapView.mapWindow.map.mapObjects.clear()
         val imageProvider = ImageProvider.fromResource(context, R.drawable.marker)
         for (place in placeList) {
-//            val tapListener = MapObjectTapListener { _, _ -> goToPlace(place) }
-//            mapObjectTapListenerList.add(tapListener)
+            val tapListener = MapObjectTapListener { _, _ -> goToPlace(place) }
+            mapObjectTapListenerList.add(tapListener)
             mapView.mapWindow.map.mapObjects.addPlacemark().apply {
                 geometry = Point(place.lat, place.lon)
                 setIcon(imageProvider)
-                //  addTapListener(tapListener)
+                  addTapListener(tapListener)
             }
         }
     }
 
-//    private fun goToPlace(place: Place): Boolean {
-//        if (WifiChecker.isInternetConnected(requireContext())) {
+    private fun goToPlace(place: Place): Boolean {
+        if (WifiChecker.isInternetConnected(requireContext())) {
 //            usersViewModel.getUserEntries()
-//            val position = CameraPosition(
-//                Point(place.lat, place.lon),
-//                /* zoom = */ 17f,
-//                /* azimuth = */mapView.mapWindow.map.cameraPosition.azimuth,
-//                /* tilt = */ mapView.mapWindow.map.cameraPosition.tilt
-//            )
-//            setPositionOnMap(position, Animation(Animation.Type.SMOOTH, 0.5f))
-//            setUpModalBottomSheet(place)
-//        } else {
-//            Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
-//        }
-//        return true
-//    }
+            val position = CameraPosition(
+                Point(place.lat, place.lon),
+                /* zoom = */ 17f,
+                /* azimuth = */mapView.mapWindow.map.cameraPosition.azimuth,
+                /* tilt = */ mapView.mapWindow.map.cameraPosition.tilt
+            )
+            setPositionOnMap(position, Animation(Animation.Type.SMOOTH, 0.5f))
+            setUpModalBottomSheet(place)
+        } else {
+            Toast.makeText(context, "Нет подключения к интернету", Toast.LENGTH_LONG).show()
+        }
+        Log.d("mLogPlaceID",place.id.toString())
+        return true
+    }
 
-//    private fun setUpModalBottomSheet(place: Place) {
-//        val modalBottomSheetFragment = ModalBottomSheetFragment(place)
-//        parentFragmentManager.let {
-//            modalBottomSheetFragment.show(
-//                it,
-//                modalBottomSheetFragment.tag
-//            )
-//        }
-//    }
+    private fun setUpModalBottomSheet(place: Place) {
+        val bundle = Bundle()
+        bundle.putString("address",place.address)
+        bundle.putInt("id",place.id)
+        findNavController().navigate(R.id.action_Maps_to_Place,bundle)
+    }
 
     private fun setPositionOnMap(position: CameraPosition, animation: Animation? = null) {
         if (animation != null) {

@@ -19,7 +19,7 @@ class ProfileModule {
         repository: ProfileRepository,
     ): ProfileViewModelFactory = ProfileViewModelFactory(repository)
     @Provides
-    fun provideMapsRepository(
+    fun provideProfileRepository(
         storage: ProfileStorage
         ): ProfileRepository = ProfileRepositoryImpl(storage)
 

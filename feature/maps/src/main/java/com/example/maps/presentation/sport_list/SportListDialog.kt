@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.maps.R
 
-// Define a DialogList class that extends Dialog
+
 abstract class DialogList(
     context: Context?,
     private var adapter: SportAdapter

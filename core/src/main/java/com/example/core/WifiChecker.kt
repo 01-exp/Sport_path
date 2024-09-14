@@ -1,10 +1,9 @@
-package com.example.maps.presentation
+package com.example.core
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.annotation.RequiresApi
 
 object WifiChecker {
     fun isInternetConnected(context: Context): Boolean {

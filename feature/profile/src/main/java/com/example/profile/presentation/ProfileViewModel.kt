@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() {
 
-    private val loginCodeMutable: MutableLiveData<UserInfo> = MutableLiveData()
     fun userOut() {
         viewModelScope.launch {
             repository.userOut()
@@ -20,8 +19,6 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
 
     fun getUserName(): String =
         repository.getUserName()
-
-
 }
 
 class ProfileViewModelFactory(private val profileRepository: ProfileRepository) :

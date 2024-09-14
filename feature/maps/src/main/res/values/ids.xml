@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="action_Maps_to_Auth" type="id"/>
     <item name="action_Maps_to_Profile" type="id"/>
+    <item name="action_Maps_to_Entries" type="id"/>
+    <item name="action_Maps_to_Place" type="id"/>
 </resources>

@@ -12,8 +12,11 @@
             android:id="@id/action_Maps_to_Profile"
             app:destination="@id/Profile" />
         <action
-            android:id="@id/action_Maps_to_Auth"
-            app:destination="@id/Auth" />
+            android:id="@id/action_Maps_to_Entries"
+            app:destination="@id/Entries"/>
+        <action
+            android:id="@id/action_Maps_to_Place"
+            app:destination="@id/Place"/>
     </fragment>
 
     <fragment
@@ -78,6 +81,31 @@
             app:destination="@id/Login"/>
     </dialog>
 
+    <dialog
+        android:id="@+id/Entries"
+        android:name="com.example.entry.presentation.EntriesBottomSheetFragment"
+        android:label="Entries">
+        <action
+            android:id="@id/action_Entries_to_DelConfirm"
+            app:destination="@id/DelConfirm"/>
+    </dialog>
 
+    <dialog
+        android:id="@+id/DelConfirm"
+        android:name="com.example.entry.presentation.ConfirmDialogFragment"
+        android:label="DelConfirm"/>
 
+    <dialog
+        android:id="@+id/Place"
+        android:name="com.example.place.presentation.ModalBottomSheetFragment"
+        android:label="Place">
+        <action
+            android:id="@id/action_Place_to_PlaceOnline"
+            app:destination="@id/PlaceOnline"/>
+    </dialog>
+
+    <dialog
+        android:id="@+id/PlaceOnline"
+        android:name="com.example.place.presentation.place_online.PlaceOnlineDialog"
+        android:label="Place"/>
 </navigation>

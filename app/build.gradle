@@ -91,6 +91,8 @@ android {
         implementation project(path: ':feature:auth')
         implementation project(path: ':feature:maps')
         implementation project(path: ':feature:profile')
+        implementation project(path: ':feature:entry')
+        implementation project(path: ':feature:place')
 
 
 

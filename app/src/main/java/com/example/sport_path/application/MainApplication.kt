@@ -6,6 +6,9 @@ import com.example.auth.presentation.di.AuthComponent
 import com.example.auth.presentation.di.DaggerAuthComponent
 import com.example.auth.presentation.di.provider.AuthComponentProvider
 import com.example.core.AppDeps
+import com.example.entry.presentation.di.DaggerEntryComponent
+import com.example.entry.presentation.di.EntryComponent
+import com.example.entry.presentation.di.provider.EntryComponentProvider
 import com.example.login.presentation.di.DaggerLoginComponent
 import com.example.maps.presentation.di.DaggerMapsComponent
 import com.example.login.presentation.di.LoginComponent
@@ -14,6 +17,9 @@ import com.example.login.presentation.di.provider.LoginComponentProvider
 import com.example.maps.presentation.di.DaggerProfileComponent
 import com.example.maps.presentation.di.ProfileComponent
 import com.example.maps.presentation.di.provider.MapsComponentProvider
+import com.example.place.presentation.di.DaggerPlaceComponent
+import com.example.place.presentation.di.PlaceComponent
+import com.example.place.presentation.di.provider.PlaceComponentProvider
 import com.example.profile.presentation.di.provider.ProfileComponentProvider
 import com.example.splash.presentation.di.DaggerSplashComponent
 import com.example.splash.presentation.di.SplashComponent
@@ -25,8 +31,9 @@ import com.example.sport_path.services.dagger.DaggerAppComponent
 import com.yandex.mapkit.MapKitFactory
 
 
-class MainApplication:Application(),SplashComponentProvider, LoginComponentProvider,
-    AuthComponentProvider, MapsComponentProvider, ProfileComponentProvider {
+class MainApplication : Application(), SplashComponentProvider, LoginComponentProvider,
+    AuthComponentProvider, MapsComponentProvider, ProfileComponentProvider, EntryComponentProvider,
+    PlaceComponentProvider {
     lateinit var appComponent: AppComponent
     override fun onCreate() {
         super.onCreate()
@@ -34,12 +41,12 @@ class MainApplication:Application(),SplashComponentProvider, LoginComponentProvi
         initializeMapKit()
     }
 
-    private fun  initializeMapKit(){
+    private fun initializeMapKit() {
         MapKitFactory.setApiKey(BuildConfig.API_KEY)
         MapKitFactory.initialize(this)
     }
 
-    private inner class AppDepsImpl: AppDeps {
+    private inner class AppDepsImpl : AppDeps {
         override val context: Context = this@MainApplication
     }
 
@@ -59,11 +66,18 @@ class MainApplication:Application(),SplashComponentProvider, LoginComponentProvi
     override fun getProfileComponent(): ProfileComponent =
         DaggerProfileComponent.builder().appDeps(AppDepsImpl()).build()
 
+    override fun getEntryComponent(): EntryComponent =
+        DaggerEntryComponent.builder().appDeps(AppDepsImpl()).build()
+
+    override fun getPlaceComponent(): PlaceComponent =
+        DaggerPlaceComponent.builder().appDeps(AppDepsImpl()).build()
+
+
 
 }
 
-val Context.appComponent : AppComponent
-    get() = when(this){
+val Context.appComponent: AppComponent
+    get() = when (this) {
         is MainApplication -> appComponent
-        else ->this.applicationContext.appComponent
+        else -> this.applicationContext.appComponent
     }
